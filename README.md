@@ -44,7 +44,7 @@ The UI doesn't just show numbers; it changes its visual "blood pressure" as you 
 
 | **Healthy (Relieved)** | **Warning (Nervous)** | **Bankrupt (Dead)** | **Deficit (On Fire)** |
 | :---: | :---: | :---: | :---: |
-| <img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/4b269f06-2e80-4726-a97a-e70945c6405d" /> | <img width="475" height="233" alt="image" src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" /> | <img width="479" height="231" alt="image" src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" /> | <img width="470" height="222" alt="image" src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" /> |
+| <img width="476" height="233" alt="image" src="https://github.com/user-attachments/assets/774ecd33-b489-4d27-978c-8220903032fc" /> | <img width="475" height="233" alt="image" src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" /> | <img width="479" height="231" alt="image" src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" /> | <img width="470" height="222" alt="image" src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" /> |
 | **"You're okay... for now."** | **"The sweat is real."** | **"Game over, man."** | **"Burning your savings."** |
 
 ---
