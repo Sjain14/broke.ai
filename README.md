@@ -24,16 +24,25 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 *   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
 *   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone. 
 
-<img width="1913" height="940" alt="image" src="https://github.com/user-attachments/assets/454cfd39-c335-48cb-a8be-8b056f20c27f" />
+<img width="1916" height="941" alt="image" src="https://github.com/user-attachments/assets/e50348e6-4f29-4e5d-942a-1ba05b1b552b" />
 
 
-<img width="1916" height="940" alt="image" src="https://github.com/user-attachments/assets/b46cd6f6-ca1d-470b-a494-66b1555b641c" />
+
+<img width="1918" height="941" alt="image" src="https://github.com/user-attachments/assets/be65d80e-263f-4534-90da-165dc3903fc4" />
 
 
-<img width="1919" height="942" alt="image" src="https://github.com/user-attachments/assets/8ef7b41d-ff4c-4e0e-ae7b-b03a98fc8522" />
 
 
-<img width="1919" height="941" alt="image" src="https://github.com/user-attachments/assets/6bb4011b-28d2-4826-aea5-b6efb857d637" />
+<img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/dad0c83d-dd10-4428-9ee4-51b21101502a" />
+
+
+
+<img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/4b269f06-2e80-4726-a97a-e70945c6405d" />
+
+<img width="475" height="233" alt="image" src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" />
+<img width="479" height="231" alt="image" src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" />
+<img width="470" height="222" alt="image" src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" />
+
 
 
 ---
