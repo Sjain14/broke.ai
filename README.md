@@ -31,7 +31,7 @@ Below is a demonstration of how the AI's intelligence changes based on your bank
 
 | 🟢 Phase 1: High Budget Tolerance | 🔴 Phase 2: The Impulse Trap |
 | :--- | :--- |
-| **Prompt:** "Can I eat outside?" <br> **Status:** ₹27,100 left. <br> **AI:** Sassy, mathematically allowing, but warns about your future. | **Action:** Spent ₹20,199 on a Zara dress. <br> **Ledger Name:** *Polyester Poverty* (Auto-generated). <br> **AI:** Nuclear meltdown mode triggered. |
+| **Prompt:** "Can I eat outside?" <br> **Status:** ₹27,100 left. <br> **AI:** Sassy, mathematically allowing, but warns about your future. | **Action:** Spent ₹20,199 on a Zara dress. <br> **Ledger Name:** *Zara dress* (Auto-generated). <br> **AI:** Nuclear meltdown mode triggered. |
 | <img src="https://github.com/user-attachments/assets/e50348e6-4f29-4e5d-942a-1ba05b1b552b" width="100%" /> | <img src="https://github.com/user-attachments/assets/be65d80e-263f-4534-90da-165dc3903fc4" width="100%" /> |
 | **Phase 3: Low Budget Reality** | **Phase 4: Sarcastic Discipline** |
 | **Prompt:** (Same as Phase 1) "Can I eat outside?" <br> **Status:** ₹6,901 left. <br> **AI:** Absolute denial. Commands you to stay home. | **Action:** Saved money on dinner (Spent ₹260). <br> **Ledger Name:** *Dynamite Friends* (Auto-generated). <br> **AI:** Roasts you for "begging for ₹10" despite the save. |
