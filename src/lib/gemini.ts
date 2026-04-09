@@ -45,7 +45,7 @@ OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy
 
   if (DEBUG) console.log('Sending to Gemini:', { prompt });
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const result = await model.generateContent(prompt);
     const raw = result.response.text().trim();
     if (DEBUG) console.log('Raw Gemini Response:', raw);
@@ -82,7 +82,7 @@ export async function analyzeReceipt(
   totalBudget: number
 ): Promise<ReceiptAnalysis> {
   const percentageLeft = ((remainingBudget / totalBudget) * 100).toFixed(1);
-  const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const prompt = `You are BROKE.AI, the user's brutally honest best friend. Analyze this receipt. Extract the main item bought and the total amount.
 Reality Check: They have ₹${remainingBudget} left out of their ₹${totalBudget} discretionary budget (${percentageLeft}% remaining) with ${daysLeft} days left until payday.
@@ -103,7 +103,7 @@ Return ONLY a raw JSON object with no markdown formatting: { "item": "string", "
     const jsonMatch = raw.match(/\{[\s\S]*\}/);
     if (!jsonMatch) throw new Error("No JSON found in response");
     const parsed = JSON.parse(jsonMatch[0]) as ReceiptAnalysis;
-    
+
     if (!parsed.item || typeof parsed.amount !== 'number' || !parsed.roast) {
       throw new Error('Invalid structure');
     }
