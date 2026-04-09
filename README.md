@@ -26,26 +26,27 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 
 ---
 
-## 🧠 Context-Aware Persona: The "Mood" Shift
-Below is a demonstration of how the AI's intelligence changes based on your bank balance. Even with the same prompt, the response evolves from "Sassy Approval" to "Total Destruction."
+### 🧠 Context-Aware Persona: The "Mood" Shift
+Broke.AI adapts its personality based on your financial health. Even with the same prompt, the response evolves from a sassy warning to a total psychological meltdown.
 
-| 🟢 Phase 1: High Budget Tolerance | 🔴 Phase 2: The Impulse Trap |
+| 🟢 Phase 1: High Budget | 🔴 Phase 2: The Impulse Trap |
 | :--- | :--- |
-| **Prompt:** "Can I eat outside?" <br> **Status:** ₹27,100 left. <br> **AI:** Sassy, mathematically allowing, but warns about your future. | **Action:** Spent ₹20,199 on a Zara dress. <br> **Ledger Name:** *Zara dress* (Auto-generated). <br> **AI:** Nuclear meltdown mode triggered. |
+| **Prompt:** "Can I eat outside?" <br> **Status:** ₹27,100 remaining. <br> **AI:** Sassy and allowing. It warns you about the future but lets you live your life. | **Action:** Spent ₹20,199 on a Zara dress. <br> **Ledger:** *Zara Dress* (Literal/Direct). <br> **AI:** Absolute nuclear meltdown mode. |
 | <img src="https://github.com/user-attachments/assets/e50348e6-4f29-4e5d-942a-1ba05b1b552b" width="100%" /> | <img src="https://github.com/user-attachments/assets/be65d80e-263f-4534-90da-165dc3903fc4" width="100%" /> |
-| **Phase 3: Low Budget Reality** | **Phase 4: Sarcastic Discipline** |
-| **Prompt:** (Same as Phase 1) "Can I eat outside?" <br> **Status:** ₹6,901 left. <br> **AI:** Absolute denial. Commands you to stay home. | **Action:** Saved money on dinner (Spent ₹260). <br> **Ledger Name:** *Dynamite Friends* (Auto-generated). <br> **AI:** Roasts you for "begging for ₹10" despite the save. |
+| **Phase 3: Low Budget Reality** | **🟡 Phase 4: Sarcastic Discipline** |
+| **Prompt:** "Can I eat outside?" <br> **Status:** ₹6,901 remaining. <br> **AI:** Total denial. It mathematically proves why you must stay home. | **Action:** Spent ₹260 on dinner. <br> **Ledger:** *Dinner with Friends* (Simplified). <br> **AI:** Roasts your "noble" attempt to save money. |
 | <img src="https://github.com/user-attachments/assets/dad0c83d-dd10-4428-9ee4-51b21101502a" width="100%" /> | <img src="https://github.com/user-attachments/assets/4b269f06-2e80-4726-a97a-e70945c6405d" width="100%" /> |
 
 ---
 
-## 📊 Visual Stress Indicators (Header Evolution)
-The UI doesn't just show numbers; it changes its visual "blood pressure" as you near bankruptcy.
+### 📊 Visual Stress Indicators
+The UI doesn't just display numbers; it changes its visual "blood pressure" as you approach financial ruin. The background glow, icons, and status text shift to induce the appropriate level of panic.
 
-| **Healthy (Relieved)** | **Warning (Nervous)** | **Bankrupt (Dead)** | **Deficit (On Fire)** |
+| **Healthy** | **Warning** | **Bankrupt** | **Deficit** |
 | :---: | :---: | :---: | :---: |
-| <img width="476" height="233" alt="image" src="https://github.com/user-attachments/assets/774ecd33-b489-4d27-978c-8220903032fc" /> | <img width="475" height="233" alt="image" src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" /> | <img width="479" height="231" alt="image" src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" /> | <img width="470" height="222" alt="image" src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" /> |
-| **"You're okay... for now."** | **"The sweat is real."** | **"Game over, man."** | **"Burning your savings."** |
+| <img src="https://github.com/user-attachments/assets/774ecd33-b489-4d27-978c-8220903032fc" width="100%" /> | <img src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" width="100%" /> | <img src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" width="100%" /> | <img src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" width="100%" /> |
+| 😌 | 🤢 | 💀 | 🔥 |
+| *You're okay... for now.* | *The sweat is real.* | *Game over, man.* | *Burning savings.* |
 
 ---
 
