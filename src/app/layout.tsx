@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: 'Broke.AI | The Toxic Finance Tracker',
   description:
     'An AI that psychologically abuses you into saving money. Every rupee wasted is documented and judged.',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

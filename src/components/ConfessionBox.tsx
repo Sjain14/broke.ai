@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Camera, Send, Loader2 } from 'lucide-react';
 import { useStore } from '@/lib/store';
@@ -27,50 +27,105 @@ export default function ConfessionBox() {
   // Track whether the current submission is a vision scan
   const [isScanning, setIsScanning] = useState(false);
 
-  const addExpense      = useStore((s) => s.addExpense);
-  const setAiRoast      = useStore((s) => s.setAiRoast);
-  const setIsTyping     = useStore((s) => s.setIsTyping);
-  const remainingBudget = useStore((s) => s.remainingBudget);
-  const daysLeft        = useStore((s) => s.daysLeft);
-  
-  const salary          = useStore((s) => s.salary);
-  const fixedExpenses   = useStore((s) => s.fixedExpenses);
-  const investments     = useStore((s) => s.investments);
-  const totalBudget     = salary - fixedExpenses - investments;
+  const addExpense         = useStore((s) => s.addExpense);
+  const setAiRoast         = useStore((s) => s.setAiRoast);
+  const setIsTyping        = useStore((s) => s.setIsTyping);
+  const remainingBudget    = useStore((s) => s.remainingBudget);
+  const daysLeft           = useStore((s) => s.daysLeft);
 
-  // ─── Text submission ────────────────────────────────────────────────────────
+  const salary        = useStore((s) => s.salary);
+  const fixedExpenses = useStore((s) => s.fixedExpenses);
+  const investments   = useStore((s) => s.investments);
+  const totalBudget   = salary - fixedExpenses - investments;
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // ─── Text submission (unified command router) ──────────────────────────
   const handleSubmit = async () => {
-    const trimmed = input.trim();
-    if (!trimmed || isSubmitting) return;
-
-    const parsed = parseExpense(trimmed);
-    if (!parsed) {
-      setError('Format: "₹900 on mocktails" — is reading a format too hard for you?');
-      return;
-    }
-    if (parsed.amount <= 0) {
-      setError("Negative expenses? That's not how bankruptcy works.");
+    const text = input.trim();
+    if (!text || isSubmitting) return;
+    
+    if (!text.startsWith('/confess') && !text.startsWith('/status') && !text.startsWith('/help')) {
       return;
     }
 
     setError('');
     setIsSubmitting(true);
-
-    const budgetAfter = remainingBudget() - parsed.amount;
-    addExpense(parsed.name, parsed.amount);
     setInput('');
 
-    const latestId = useStore.getState().history.at(-1)?.id;
+    const budget = remainingBudget();
+    const days   = daysLeft();
 
-    setIsTyping(true, 'Drafting the perfect insult...');
-    try {
-      const roast = await generateToxicRoast(parsed.amount, parsed.name, budgetAfter, daysLeft(), totalBudget);
-      if (latestId) setAiRoast(latestId, roast);
-    } catch {
-      if (latestId) setAiRoast(latestId, "Even my servers can't handle how broke you are.");
-    } finally {
-      setIsTyping(false);
+    // ─── /status (hardcoded, no API) ───────────────────────────────────
+    if (text.startsWith('/status')) {
+      const daily = days > 0 ? budget / days : budget;
+      const pct   = totalBudget > 0 ? (budget / totalBudget) * 100 : 0;
+      const stats = `(₹${budget} left / ${days} days, ₹${daily.toFixed(0)}/day)`;
+
+      let msg: string;
+      if      (budget < 0)                            msg = "🚨 DEFICIT: You are officially burning your savings. " + stats;
+      else if (budget === 0)                          msg = "💀 BANKRUPT: Welcome to absolute zero. " + stats;
+      else if (pct > 90)                              msg = "👑 BALLER: You just got paid. Don't get cocky. " + stats;
+      else if (pct < 15 && days > 15)                 msg = "⚠️ RED ALERT: Starvation imminent. Half the month left and no money. " + stats;
+      else if (daily < 150 && budget > 0)             msg = "🍜 MAGGI MODE: You can afford tap water and instant noodles. " + stats;
+      else if (daily > 3000)                          msg = "🎩 MONOPOLY: Why are you even using a budget tracker? " + stats;
+      else if (days < 5 && pct > 30)                  msg = "🍾 SURVIVOR: You actually hoarded money. Miracles happen. " + stats;
+      else if (days > 25 && pct < 50)                 msg = "📉 DISASTER: The month just started and you blew half your cash. " + stats;
+      else if (Math.abs(pct - 50) < 1 && days > 12)   msg = "⚖️ BALANCED: Half money, half month. Boring but safe. " + stats;
+      else                                            msg = "📊 MEDIOCRE: You are surviving, but barely. " + stats;
+
+      addExpense('Status Check', 0, 'status');
+      const id = useStore.getState().history.at(-1)?.id;
+      if (id) setAiRoast(id, msg);
       setIsSubmitting(false);
+      return;
+    }
+
+    // ─── /confess ──────────────────────────────────────────────────────
+    if (text.startsWith('/confess')) {
+      const match = text.match(/\d+(?:\.\d+)?/);
+      if (match) {
+        const amount = parseFloat(match[0]);
+        const itemName = text.replace('/confess', '').replace(/\d+(?:\.\d+)?/g, '').trim() || 'unknown';
+        const budgetAfter = budget - amount;
+
+        addExpense(itemName, amount, 'expense');
+        const id = useStore.getState().history.at(-1)?.id;
+        
+        setIsTyping(true, 'Drafting the perfect insult...');
+        try {
+          const roast = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense');
+          if (id) setAiRoast(id, roast);
+        } catch {
+          if (id) setAiRoast(id, "Even my servers can't handle how broke you are.");
+        } finally {
+          setIsTyping(false);
+          setIsSubmitting(false);
+        }
+      } else {
+        setError('⚠️ Add an amount to confess (e.g. /confess 500 food)');
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // ─── /help ─────────────────────────────────────────────────────────
+    if (text.startsWith('/help')) {
+      const helpText = text.replace('/help', '').trim() || 'Asking for help';
+      addExpense(helpText, 0, 'help');
+      const id = useStore.getState().history.at(-1)?.id;
+      
+      setIsTyping(true, 'Consulting the oracle of financial doom...');
+      try {
+        const reply = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help');
+        if (id) setAiRoast(id, reply);
+      } catch {
+        if (id) setAiRoast(id, 'My advice: stop spending. Revolutionary, I know.');
+      } finally {
+        setIsTyping(false);
+        setIsSubmitting(false);
+      }
+      return;
     }
   };
 
@@ -94,7 +149,7 @@ export default function ConfessionBox() {
 
         const { item, amount, roast } = await analyzeReceipt(base64, file.type, budget, daysLeft(), totalBudget);
 
-        addExpense(item, amount);
+        addExpense(item, amount, 'expense');
         const latestId = useStore.getState().history.at(-1)?.id;
         if (latestId) setAiRoast(latestId, roast);
       } catch {
@@ -122,7 +177,43 @@ export default function ConfessionBox() {
 
   return (
     <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 shrink-0">
+      {/* Quick Actions Row */}
+      <div className="flex flex-wrap gap-2 mb-2">
+        <button
+          onClick={() => { setInput(prev => '/confess ' + prev.replace(/^\/(confess|status|help)\s*/, '')); inputRef.current?.focus(); }}
+          disabled={isSubmitting}
+          className="flex-shrink-0 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs px-3 py-1.5 rounded-full hover:bg-zinc-800 hover:text-zinc-200 transition-all disabled:opacity-40"
+        >
+          💸 /confess
+        </button>
+        <button
+          onClick={() => { setInput(prev => '/status ' + prev.replace(/^\/(confess|status|help)\s*/, '')); inputRef.current?.focus(); }}
+          disabled={isSubmitting}
+          className="flex-shrink-0 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs px-3 py-1.5 rounded-full hover:bg-zinc-800 hover:text-zinc-200 transition-all disabled:opacity-40"
+        >
+          📊 /status
+        </button>
+        <button
+          onClick={() => { setInput(prev => '/help ' + prev.replace(/^\/(confess|status|help)\s*/, '')); inputRef.current?.focus(); }}
+          disabled={isSubmitting}
+          className="flex-shrink-0 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs px-3 py-1.5 rounded-full hover:bg-zinc-800 hover:text-zinc-200 transition-all disabled:opacity-40"
+        >
+          🆘 /help
+        </button>
+      </div>
+
       <AnimatePresence>
+        {input.trim() !== '' && !input.trim().startsWith('/confess') && !input.trim().startsWith('/status') && !input.trim().startsWith('/help') && (
+          <motion.p
+            key="warning"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="text-red-500 font-mono text-xs mb-3 px-1 tracking-wide"
+          >
+            ⚠️ Start with /confess, /status, or /help
+          </motion.p>
+        )}
         {error && (
           <motion.p
             key="error"
@@ -167,6 +258,7 @@ export default function ConfessionBox() {
 
         {/* Text input */}
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => { setInput(e.target.value); if (error) setError(''); }}
@@ -178,10 +270,10 @@ export default function ConfessionBox() {
 
         {/* Send button */}
         <motion.button
-          whileHover={{ scale: isSubmitting ? 1 : 1.06 }}
-          whileTap={{ scale: isSubmitting ? 1 : 0.9 }}
+          whileHover={{ scale: isSubmitting || (input.trim() !== '' && !input.trim().startsWith('/confess') && !input.trim().startsWith('/status') && !input.trim().startsWith('/help')) ? 1 : 1.06 }}
+          whileTap={{ scale: isSubmitting || (input.trim() !== '' && !input.trim().startsWith('/confess') && !input.trim().startsWith('/status') && !input.trim().startsWith('/help')) ? 1 : 0.9 }}
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || (input.trim() !== '' && !input.trim().startsWith('/confess') && !input.trim().startsWith('/status') && !input.trim().startsWith('/help'))}
           className="shrink-0 w-11 h-11 rounded-xl bg-red-700 hover:bg-red-600 border border-red-600 flex items-center justify-center text-white shadow-lg shadow-red-950/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="Confess your sin"
         >

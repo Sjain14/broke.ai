@@ -37,8 +37,16 @@ export default function SurvivalHeader() {
     prevBudget.current = budget;
   }, [budget, controls]);
 
-  const isBroke        = budget <= 5000;
-  const isCritical     = base > 0 && budget / base < 0.15;
+  const isBroke    = budget <= 5000;
+  const isCritical = base > 0 && budget / base < 0.15;
+  const pct        = base > 0 ? (budget / base) * 100 : 0;
+
+  const emoji =
+    pct < 0   ? '🔥' :
+    pct <= 5  ? '💀' :
+    pct <= 25 ? '🤢' :
+    pct <= 50 ? '😠' :
+    pct <= 75 ? '😐' : '😌';
 
   const spentPct = base <= 0 ? 100 : Math.min(100, Math.max(0, ((base - budget) / base) * 100));
 
@@ -53,7 +61,7 @@ export default function SurvivalHeader() {
         <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-500">
           BROKE.AI // STATUS_CHECK
         </span>
-        <span className={`text-[10px] font-mono tracking-widest uppercase ${days <= 3 ? 'text-red-600' : 'text-zinc-500'}`}>
+        <span className="text-sm font-bold font-mono tracking-widest uppercase text-red-400">
           {days}d to payday
         </span>
       </div>
@@ -81,13 +89,13 @@ export default function SurvivalHeader() {
         </div>
 
         <motion.div
-          key={isBroke ? 'broke' : 'okay'}
+          key={emoji}
           initial={{ scale: 0, rotate: -20 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: 'spring', stiffness: 400, damping: 15 }}
           className="mb-1 text-3xl select-none"
         >
-          {isBroke ? '💀' : '🤬'}
+          {emoji}
         </motion.div>
       </div>
 

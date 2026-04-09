@@ -4,6 +4,7 @@ export interface HistoryItem {
   id: string;
   expenseName: string;
   amount: number;
+  type: 'expense' | 'help' | 'status';
   aiRoast?: string;
   timestamp: number;
 }
@@ -25,7 +26,7 @@ interface BudgetState extends Settings {
   daysLeft: () => number;
 
   // Actions
-  addExpense: (name: string, amount: number) => void;
+  addExpense: (name: string, amount: number, type: 'expense' | 'help' | 'status') => void;
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, newName: string, newAmount: number) => void;
   setAiRoast: (id: string, roast: string) => void;
@@ -43,6 +44,7 @@ const SEED_HISTORY: HistoryItem[] = [
     id: 'seed-1',
     expenseName: 'Artisan Coffee',
     amount: 400,
+    type: 'expense',
     aiRoast: '₹400 for bean water? Your bloodline survived on tap water. Grow up.',
     timestamp: Date.now() - 1000 * 60 * 60 * 3,
   },
@@ -50,6 +52,7 @@ const SEED_HISTORY: HistoryItem[] = [
     id: 'seed-2',
     expenseName: 'Farzi Cafe Apps',
     amount: 2500,
+    type: 'expense',
     aiRoast: "Deconstructed samosas for ₹2500? The only thing deconstructed is your credit score.",
     timestamp: Date.now() - 1000 * 60 * 30,
   },
@@ -77,7 +80,7 @@ export const useStore = create<BudgetState>((set, get) => ({
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   },
 
-  addExpense: (name, amount) =>
+  addExpense: (name, amount, type) =>
     set((state) => ({
       history: [
         ...state.history,
@@ -85,6 +88,7 @@ export const useStore = create<BudgetState>((set, get) => ({
           id: crypto.randomUUID(),
           expenseName: name,
           amount,
+          type,
           timestamp: Date.now(),
         },
       ],

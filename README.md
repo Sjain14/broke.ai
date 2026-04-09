@@ -1,53 +1,60 @@
-# 🔥 Broke.AI
+<div align="center">
+  <h1>💸 Broke.AI 💸</h1>
+  <h3>Your Toxic Financial Manager</h3>
+  <p><i>Because pie charts don't change behavior. Psychological abuse does.</i></p>
 
-> **Traditional finance trackers show you pie charts. We show you the harsh reality of your life choices.**
-
-![Next.js 14](https://img.shields.io/badge/Next.js%2014-black?style=for-the-badge&logo=next.js&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Zustand](https://img.shields.io/badge/Zustand-4A4A55?style=for-the-badge&logo=react&logoColor=white)
-![Google Gemini 1.5 Flash](https://img.shields.io/badge/Gemini%201.5%20Flash-8E75B2?style=for-the-badge&logo=google&logoColor=white)
-
----
-
-## 🛑 The Concept
-
-**Boring pie charts don't save money. Psychological abuse does.**
-
-Most finance apps are gentle. They politely suggest you "stay within limits" and offer a colorful breakdown of your iced coffee habits. **Broke.AI** is not your friend. It's a brutalist financial tracker equipped with a highly sarcastic, hyper-contextual AI that aggressively roasts every dumb purchase you make. We believe that if you want to stop being broke, you need to feel the panic before you hit zero.
+  ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  ![Zustand](https://img.shields.io/badge/Zustand-Bear-orange?style=for-the-badge)
+  ![Gemini 3.0](https://img.shields.io/badge/Gemini-3.0_Flash-blue?style=for-the-badge&logo=google)
+</div>
 
 ---
 
-## ⚡ Killer Features
+## 💥 The Problem & The Solution
 
-- 🧠 **Context-Aware AI Roasts:** Our "Financial Interrogator" uses exact math. It injects your active remaining budget percentage and the days left until payday directly into the Gemini prompt so you can't escape real consequences. (e.g., *"You only have 30% of your money left for the next 21 days and you bought THIS?"*)
-- 👁️ **Vision Integration (Receipt Parser):** Too lazy to type? Upload an image of your receipt. Broke.AI extracts the amount and the item purchased using Gemini Vision, logging the transaction and devastating your ego dynamically.
-- 🩸 **Bleeding UI:** Feel the financial damage physically. Using **Framer Motion**, the remaining budget violently flashes a stressful red with every expense, and dropping below 15% discretionary budget casts an inescapable, creeping red shadow across the entire screen. 
+Traditional budgeting apps are fundamentally broken. They give you a neat little pie chart that tells you you've spent 40% of your money on food. You look at it, feel a fleeting moment of guilt, and then immediately order another ₹800 pizza on Zomato. **Pie charts do not change human behavior.**
 
----
+**Broke.AI** does. We believe that humans respond best to two things: panic and psychological abuse. We built an AI auditor that tracks your spending, actively calculates how close you are to starvation, and brutally roasts your financial decisions in real-time. It’s tough love, heavy on the tough. 
 
-## ⚙️ Local Setup
+## ☠️ Core Features
 
-Ready to face the music? 
-
-1. **Clone the Interrogation Room**
-   ```bash
-   git clone https://github.com/your-username/broke-ai.git
-   cd broke-ai
-   npm install
-   ```
-
-2. **Supply the Intelligence**
-   Create a `.env.local` file at the root of the project and plug in your Google Gemini API key requirement to activate the misery:
-   ```env
-   NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-
-3. **Face The Consequences**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) and log your first mistake.
+*   **🧠 Dynamic Persona Engine:** The AI doesn't just blindly insult you; it adapts to your exact financial reality. If you are entirely broke and buy a ₹10 snack, it destroys you for prioritizing sugar over survival. If you are rich and buy that same snack, it acts dismissive and body-shames the chocolate. 
+*   **⚖️ Dual Telegram-Style Modes:** Use `💸 /confess` to declare a purchase and get audited. Use `🆘 /help` when you actually need tough-love financial direction without logging an expense.
+*   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
+*   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone. 
 
 ---
 
-*Built with immense caffeine and anxiety for the 2026 Hackathon. Thank you to the judges for reviewing!* 💀
+## 🔮 The Future: Our Diabolical Roadmap
+
+What we built for this hackathon is just the MVP. Here is where the platform goes next to entirely enforce financial discipline:
+
+*   **📧 Automated Email Interception:** Integrate with Google Workspace APIs to auto-read Zomato, Swiggy, and Amazon receipts. The second the email hits your inbox, Broke.AI sends you a WhatsApp push notification roasting you while the delivery guy is still on his way.
+*   **🛑 OTP / SMS Gateway Hijacking:** By wrapping around Twilio or native Mobile APIs, Broke.AI intercepts bank OTPs. When you try to make an impulsive purchase online, it halts the transaction: *"Are you seriously trying to spend ₹5000 on shoes right now? You only have ₹2000 left for the next 15 days. Type 'I HAVE NO SELF CONTROL' to receive your OTP."*
+*   **📉 Automated SIP Shaming:** If the system detects you skipped your monthly investments via automated bank syncs, it locks you out of your discretionary allowance tracker entirely until you invest.
+
+---
+
+## 🚀 Local Setup
+
+Want to get abused locally? It takes less than 60 seconds.
+
+```bash
+# 1. Clone the repository and install dependencies
+npm install
+
+# 2. Set up your environment variables
+# Create a .env.local file in the root directory and add:
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+
+# 3. Spin up the interrogation room
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) and prepare to have your ego dismantled.
+
+---
+<div align="center">
+  <i>Built for the hackathon with ❤️ (and impending debt)</i>
+</div>

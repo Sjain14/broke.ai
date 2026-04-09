@@ -18,6 +18,13 @@ export default function RoastFeed() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleTweet = (amount: number, roast: string) => {
+    const tweetText = encodeURIComponent(
+      `BROKE.AI just destroyed my financial ego for spending \u20b9${amount} \uD83D\uDC80\n\n"${roast}"\n\nBuilt at #Hackathon`
+    );
+    window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+  };
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history, isTyping]);
@@ -50,17 +57,23 @@ export default function RoastFeed() {
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className="space-y-2"
           >
-            {/* User expense bubble — right aligned */}
+            {/* User bubble — right aligned */}
             <div className="flex justify-end">
               <div className="max-w-[75%]">
-                <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40">
-                  <p className="font-mono text-sm font-semibold tracking-wide">
+                {item.amount === 0 ? (
+                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-mono">
                     {item.expenseName}
-                  </p>
-                  <p className="font-mono text-lg font-black text-red-300 mt-0.5">
-                    −₹{item.amount.toLocaleString('en-IN')}
-                  </p>
-                </div>
+                  </div>
+                ) : (
+                  <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40">
+                    <p className="font-mono text-sm font-semibold tracking-wide">
+                      {item.expenseName}
+                    </p>
+                    <p className="font-mono text-lg font-black text-red-300 mt-0.5">
+                      −₹{item.amount.toLocaleString('en-IN')}
+                    </p>
+                  </div>
+                )}
                 <p className="text-right text-[10px] font-mono text-zinc-700 mt-1 pr-1">
                   {new Date(item.timestamp).toLocaleTimeString('en-IN', {
                     hour: '2-digit',
@@ -89,16 +102,28 @@ export default function RoastFeed() {
                       </span>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md relative group/roast">
-                      <p className="font-mono text-sm leading-relaxed pr-6">{item.aiRoast}</p>
-                      <button
-                        onClick={() => handleCopy(item.id, item.aiRoast!)}
-                        className="absolute bottom-2.5 right-2.5 text-zinc-600 hover:text-white transition-colors p-1 rounded"
-                        title="Copy roast"
-                      >
-                        {copiedId === item.id
-                          ? <Check size={12} className="text-green-500" />
-                          : <Copy size={12} />}
-                      </button>
+                      <p className="font-mono text-sm leading-relaxed pr-14">{item.aiRoast}</p>
+                      <div className="absolute bottom-2.5 right-2 flex items-center gap-0.5">
+                        <button
+                          onClick={() => handleTweet(item.amount, item.aiRoast!)}
+                          className="text-zinc-600 hover:text-sky-400 transition-colors p-1 rounded"
+                          title="Share on Twitter"
+                        >
+                          {/* X / Twitter logo */}
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L2.25 2.25h6.737l4.253 5.622 5.004-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117Z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleCopy(item.id, item.aiRoast!)}
+                          className="text-zinc-600 hover:text-white transition-colors p-1 rounded"
+                          title="Copy roast"
+                        >
+                          {copiedId === item.id
+                            ? <Check size={12} className="text-green-500" />
+                            : <Copy size={12} />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

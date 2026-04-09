@@ -119,7 +119,8 @@ export default function ExpenseLedger() {
   const remainingBudget = useStore((s) => s.remainingBudget);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const totalSpent = history.reduce((sum, i) => sum + i.amount, 0);
+  const totalSpent      = history.filter(i => i.type === 'expense').reduce((sum, i) => sum + i.amount, 0);
+  const validExpenses   = history.filter(i => i.type === 'expense');
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -145,7 +146,7 @@ export default function ExpenseLedger() {
 
       {/* Table */}
       <div className="flex-1 overflow-y-auto">
-        {history.length === 0 ? (
+        {validExpenses.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center py-16 px-6">
             <span className="text-4xl mb-3">📋</span>
             <p className="font-mono text-zinc-600 text-xs uppercase tracking-widest">
@@ -171,7 +172,7 @@ export default function ExpenseLedger() {
             </thead>
             <tbody>
               <AnimatePresence initial={false}>
-                {[...history].reverse().map((item) =>
+                {[...validExpenses].reverse().map((item) =>
                   editingId === item.id ? (
                     <EditableRow
                       key={item.id}
@@ -198,10 +199,10 @@ export default function ExpenseLedger() {
       </div>
 
       {/* Footer summary */}
-      {history.length > 0 && (
+      {validExpenses.length > 0 && (
         <div className="shrink-0 border-t border-zinc-800 px-4 py-3 bg-zinc-950 flex items-center justify-between">
           <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-widest">
-            {history.length} transaction{history.length !== 1 ? 's' : ''}
+            {validExpenses.length} transaction{validExpenses.length !== 1 ? 's' : ''}
           </span>
           <span className={`font-mono text-xs font-bold tabular-nums ${remainingBudget() < 0 ? 'text-red-500' : 'text-zinc-400'}`}>
             ₹{remainingBudget().toLocaleString('en-IN')} left
