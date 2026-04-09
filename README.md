@@ -24,6 +24,10 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 *   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
 *   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone. 
 
+<img width="1913" height="940" alt="image" src="https://github.com/user-attachments/assets/454cfd39-c335-48cb-a8be-8b056f20c27f" />
+
+<img width="1916" height="940" alt="image" src="https://github.com/user-attachments/assets/b46cd6f6-ca1d-470b-a494-66b1555b641c" />
+
 ---
 
 ## 🔮 The Future: Our Diabolical Roadmap
