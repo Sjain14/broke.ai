@@ -39,7 +39,7 @@ function Field({ label, icon, value, onChange, prefix, type = 'number' }: FieldP
 }
 
 export default function ConfigPanel() {
-  const { salary, fixedExpenses, investments, payday, updateSettings, remainingBudget } = useStore();
+  const { salary, fixedExpenses, investments, payday, updateSettings } = useStore();
 
   const [localSalary, setLocalSalary] = useState(String(salary));
   const [localFixed, setLocalFixed] = useState(String(fixedExpenses));
