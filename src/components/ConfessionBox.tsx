@@ -28,7 +28,9 @@ export default function ConfessionBox() {
   const [isScanning, setIsScanning] = useState(false);
 
   const addExpense         = useStore((s) => s.addExpense);
+  const setSummary         = useStore((s) => s.setSummary);
   const setAiRoast         = useStore((s) => s.setAiRoast);
+  const setExpenseError    = useStore((s) => s.setExpenseError);
   const setIsTyping        = useStore((s) => s.setIsTyping);
   const remainingBudget    = useStore((s) => s.remainingBudget);
   const daysLeft           = useStore((s) => s.daysLeft);
@@ -94,10 +96,13 @@ export default function ConfessionBox() {
         
         setIsTyping(true, 'Drafting the perfect insult...');
         try {
-          const roast = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense');
-          if (id) setAiRoast(id, roast);
+          const aiData = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense');
+          if (id) {
+            setAiRoast(id, aiData.roast);
+            setSummary(id, aiData.summarizedItem);
+          }
         } catch {
-          if (id) setAiRoast(id, "Even my servers can't handle how broke you are.");
+          if (id) setExpenseError(id);
         } finally {
           setIsTyping(false);
           setIsSubmitting(false);
@@ -117,10 +122,13 @@ export default function ConfessionBox() {
       
       setIsTyping(true, 'Consulting the oracle of financial doom...');
       try {
-        const reply = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help');
-        if (id) setAiRoast(id, reply);
+        const aiData = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help');
+        if (id) {
+          setAiRoast(id, aiData.roast);
+          setSummary(id, aiData.summarizedItem);
+        }
       } catch {
-        if (id) setAiRoast(id, 'My advice: stop spending. Revolutionary, I know.');
+        if (id) setExpenseError(id);
       } finally {
         setIsTyping(false);
         setIsSubmitting(false);

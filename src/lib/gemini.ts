@@ -16,7 +16,7 @@ export async function generateToxicRoast(
   daysLeft: number,
   totalBudget: number,
   type: 'expense' | 'help'
-): Promise<string> {
+): Promise<{ roast: string; summarizedItem: string }> {
   const pctLeft = totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0;
   const daily = daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget;
   const costPct = remainingBudget > 0 && amount > 0 ? (amount / remainingBudget) * 100 : 0;
@@ -41,7 +41,7 @@ export async function generateToxicRoast(
 CURRENT REALITY: ₹${remainingBudget} left (${pctLeft.toFixed(1)}% of budget). ${daysLeft} days to payday. Daily allowance: ₹${daily.toFixed(0)}.
 BEHAVIORAL DIRECTIVE: ${moodRules}
 USER INPUT: ${item} (Amount: ₹${amount})
-OUTPUT FORMAT: Return ONLY a raw JSON object: { "roast": "Your dynamic response here" }`;
+OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy 2-3 word title. IMPORTANT: The "item" field in the JSON must be DIRECT, LITERAL, and DESCRIPTIVE. Do NOT use sarcasm or metaphors here. If the user bought Zara clothes, the item is "Zara Shopping". If they had dinner, it is "Dinner Out". Save all sarcasm for the "roast" field only. Return ONLY a raw JSON object: { "item": "Literal Summary", "roast": "Your dynamic response" }`;
 
   if (DEBUG) console.log('Sending to Gemini:', { prompt });
   try {
@@ -53,18 +53,18 @@ OUTPUT FORMAT: Return ONLY a raw JSON object: { "roast": "Your dynamic response 
     try {
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error("No JSON found in response");
-      const parsed = JSON.parse(jsonMatch[0]) as ReceiptAnalysis;
-      return parsed.roast || "You broke the AI along with your bank account.";
+      const parsed = JSON.parse(jsonMatch[0]);
+      return { roast: parsed.roast || "You broke the AI along with your bank account.", summarizedItem: parsed.item || item };
     } catch (error: any) {
       if (DEBUG) console.error('Gemini Parse Error:', error, 'Raw Text:', raw);
-      if (error?.message?.includes("403")) return "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.";
+      if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
       // If parsing fails, just return the cleaned up raw text as the roast so the UI doesn't break.
-      return raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim() || "My circuits fried trying to calculate your poverty.";
+      return { roast: raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim() || "My circuits fried trying to calculate your poverty.", summarizedItem: item.length > 20 ? "Financial Mistake" : item };
     }
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Network Error:', error);
-    if (error?.message?.includes("403")) return "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.";
-    return "Even my servers can't handle how broke you are. Connection failed — just like your financial planning.";
+    if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
+    return { roast: "Even my servers can't handle how broke you are. Connection failed — just like your financial planning.", summarizedItem: item };
   }
 }
 

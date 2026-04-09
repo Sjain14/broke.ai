@@ -6,6 +6,8 @@ export interface HistoryItem {
   amount: number;
   type: 'expense' | 'help' | 'status';
   aiRoast?: string;
+  summary?: string;
+  status: 'pending' | 'success' | 'error';
   timestamp: number;
 }
 
@@ -29,7 +31,9 @@ interface BudgetState extends Settings {
   addExpense: (name: string, amount: number, type: 'expense' | 'help' | 'status') => void;
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, newName: string, newAmount: number) => void;
+  setSummary: (id: string, summary: string) => void;
   setAiRoast: (id: string, roast: string) => void;
+  setExpenseError: (id: string) => void;
   setIsTyping: (isTyping: boolean, message?: string) => void;
   updateSettings: (settings: Partial<Settings>) => void;
 }
@@ -45,6 +49,7 @@ const SEED_HISTORY: HistoryItem[] = [
     expenseName: 'Artisan Coffee',
     amount: 400,
     type: 'expense',
+    status: 'success',
     aiRoast: '₹400 for bean water? Your bloodline survived on tap water. Grow up.',
     timestamp: Date.now() - 1000 * 60 * 60 * 3,
   },
@@ -53,6 +58,7 @@ const SEED_HISTORY: HistoryItem[] = [
     expenseName: 'Farzi Cafe Apps',
     amount: 2500,
     type: 'expense',
+    status: 'success',
     aiRoast: "Deconstructed samosas for ₹2500? The only thing deconstructed is your credit score.",
     timestamp: Date.now() - 1000 * 60 * 30,
   },
@@ -89,6 +95,7 @@ export const useStore = create<BudgetState>((set, get) => ({
           expenseName: name,
           amount,
           type,
+          status: 'pending',
           timestamp: Date.now(),
         },
       ],
@@ -106,10 +113,24 @@ export const useStore = create<BudgetState>((set, get) => ({
       ),
     })),
 
+  setSummary: (id, summary) =>
+    set((state) => ({
+      history: state.history.map((item) =>
+        item.id === id ? { ...item, summary } : item
+      ),
+    })),
+
   setAiRoast: (id, roast) =>
     set((state) => ({
       history: state.history.map((item) =>
-        item.id === id ? { ...item, aiRoast: roast } : item
+        item.id === id ? { ...item, aiRoast: roast, status: 'success' } : item
+      ),
+    })),
+
+  setExpenseError: (id) =>
+    set((state) => ({
+      history: state.history.map((item) =>
+        item.id === id ? { ...item, status: 'error' } : item
       ),
     })),
 

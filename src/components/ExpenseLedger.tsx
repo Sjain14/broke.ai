@@ -84,8 +84,8 @@ function LedgerRow({
       <td className="px-3 py-2.5 font-mono text-[10px] text-zinc-600 whitespace-nowrap">
         {new Date(item.timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
       </td>
-      <td className="px-3 py-2.5 font-mono text-xs text-zinc-300 max-w-[120px] truncate" title={item.expenseName}>
-        {item.expenseName}
+      <td className="px-3 py-2.5 font-mono text-xs text-zinc-300 max-w-[200px] truncate" title={item.expenseName}>
+        {item.summary || item.expenseName}
       </td>
       <td className="px-3 py-2.5 font-mono text-xs font-semibold text-red-400 tabular-nums whitespace-nowrap">
         −₹{item.amount.toLocaleString('en-IN')}

@@ -2,8 +2,9 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { Copy, Check } from 'lucide-react';
-import { useStore } from '@/lib/store';
+import { Copy, Check, RotateCcw } from 'lucide-react';
+import { useStore, HistoryItem } from '@/lib/store';
+import { generateToxicRoast } from '@/lib/gemini';
 
 export default function RoastFeed() {
   const history       = useStore((s) => s.history);
@@ -11,6 +12,12 @@ export default function RoastFeed() {
   const typingMessage  = useStore((s) => s.typingMessage);
   const bottomRef      = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const setAiRoast     = useStore((s) => s.setAiRoast);
+  const setSummary     = useStore((s) => s.setSummary);
+  const setExpenseError = useStore((s) => s.setExpenseError);
+  const remainingBudget = useStore((s) => s.remainingBudget);
+  const totalBudget    = useStore((s) => s.salary - s.fixedExpenses - s.investments);
+  const daysLeft       = useStore((s) => s.daysLeft);
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -23,6 +30,28 @@ export default function RoastFeed() {
       `BROKE.AI just destroyed my financial ego for spending \u20b9${amount} \uD83D\uDC80\n\n"${roast}"\n\nBuilt at #Hackathon`
     );
     window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+  };
+
+  const handleRetry = async (item: HistoryItem) => {
+    const setIsTyping = useStore.getState().setIsTyping;
+    setIsTyping(true, "Retrying the interrogation...");
+    
+    try {
+      const aiData = await generateToxicRoast(
+        item.amount,
+        item.expenseName,
+        remainingBudget(),
+        daysLeft(),
+        totalBudget,
+        item.type === 'help' ? 'help' : 'expense'
+      );
+      setAiRoast(item.id, aiData.roast);
+      setSummary(item.id, aiData.summarizedItem);
+    } catch {
+      setExpenseError(item.id);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   useEffect(() => {
@@ -61,11 +90,11 @@ export default function RoastFeed() {
             <div className="flex justify-end">
               <div className="max-w-[75%]">
                 {item.amount === 0 ? (
-                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-mono">
+                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-mono break-words">
                     {item.expenseName}
                   </div>
                 ) : (
-                  <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40">
+                  <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40 break-words">
                     <p className="font-mono text-sm font-semibold tracking-wide">
                       {item.expenseName}
                     </p>
@@ -85,7 +114,37 @@ export default function RoastFeed() {
 
             {/* AI roast bubble — left aligned */}
             <AnimatePresence>
-              {item.aiRoast && (
+              {item.status === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  className="flex justify-start opacity-75"
+                >
+                  <div className="max-w-[80%]">
+                    <div className="flex items-center gap-2 mb-1.5 ml-1">
+                      <div className="w-5 h-5 rounded-full bg-zinc-800 border border-red-900/50 flex items-center justify-center text-[10px]">
+                        🔌
+                      </div>
+                      <span className="text-[10px] font-mono text-red-500/80 uppercase tracking-widest">
+                        Connection Failed
+                      </span>
+                    </div>
+                    <div className="bg-red-950/20 border border-red-900/30 text-red-500/90 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md relative group/roast flex items-center gap-3">
+                      <p className="font-mono text-sm leading-relaxed text-red-400">Generative link broken. Disappointment untransmitted.</p>
+                      <button 
+                        onClick={() => handleRetry(item)} 
+                        disabled={isTyping}
+                        className="p-1.5 rounded-md bg-red-950/40 text-red-400 hover:text-white hover:bg-red-900 transition-colors disabled:opacity-50"
+                        title="Retry Roast"
+                      >
+                        <RotateCcw className={`w-4 h-4 ${isTyping ? 'animate-spin' : ''}`} />
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {item.status === 'success' && item.aiRoast && (
                 <motion.div
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
