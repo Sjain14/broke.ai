@@ -26,7 +26,12 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 
 <img width="1913" height="940" alt="image" src="https://github.com/user-attachments/assets/454cfd39-c335-48cb-a8be-8b056f20c27f" />
 
+
 <img width="1916" height="940" alt="image" src="https://github.com/user-attachments/assets/b46cd6f6-ca1d-470b-a494-66b1555b641c" />
+
+
+<img width="1919" height="942" alt="image" src="https://github.com/user-attachments/assets/8ef7b41d-ff4c-4e0e-ae7b-b03a98fc8522" />
+
 
 ---
 
