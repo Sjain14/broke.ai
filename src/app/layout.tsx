@@ -15,9 +15,9 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'FinRoach — Toxic Finance Tracker',
+  title: 'Broke.AI | The Toxic Finance Tracker',
   description:
-    'A brutalist expense tracker that roasts your spending. Every rupee wasted is documented and judged.',
+    'An AI that psychologically abuses you into saving money. Every rupee wasted is documented and judged.',
 };
 
 export default function RootLayout({

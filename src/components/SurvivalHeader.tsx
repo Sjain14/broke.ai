@@ -1,43 +1,57 @@
 'use client';
 
 import { motion, useAnimationControls } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 
 export default function SurvivalHeader() {
   const remainingBudget = useStore((s) => s.remainingBudget);
-  const daysLeft = useStore((s) => s.daysLeft);
-  const history = useStore((s) => s.history); // subscribe so re-renders on expense
+  const daysLeft        = useStore((s) => s.daysLeft);
+  const salary          = useStore((s) => s.salary);
+  const fixedExpenses   = useStore((s) => s.fixedExpenses);
+  const investments     = useStore((s) => s.investments);
+  // Subscribe to history so component re-renders on every expense change
+  useStore((s) => s.history);
 
-  const budget = remainingBudget();
-  const days = daysLeft();
+  const budget   = remainingBudget();
+  const days     = daysLeft();
   const controls = useAnimationControls();
-  const prevBudget = useRef(budget);
+
+  const prevBudget   = useRef(budget);
+  const [isFlashing, setIsFlashing] = useState(false);
+
+  // Starting discretionary budget (no ad-hoc expenses)
+  const base = salary - fixedExpenses - investments;
 
   useEffect(() => {
-    if (prevBudget.current !== budget) {
+    if (budget < prevBudget.current) {
+      setIsFlashing(true);
       controls.start({
-        scale: [1, 1.22, 0.92, 1],
-        color: ['#ef4444', '#ef4444', '#ef4444', budget <= 5000 ? '#ef4444' : '#e4e4e7'],
-        transition: { duration: 0.55, ease: 'easeOut' },
+        scale: [1, 1.1, 1],
+        transition: { duration: 0.45, ease: 'easeOut' },
       });
+      const t = setTimeout(() => setIsFlashing(false), 500);
       prevBudget.current = budget;
+      return () => clearTimeout(t);
     }
+    prevBudget.current = budget;
   }, [budget, controls]);
 
-  const isBroke = budget <= 5000;
-  const spentPct = useStore((s) => {
-    const base = s.salary - s.fixedExpenses - s.investments;
-    if (base <= 0) return 100;
-    return Math.min(100, Math.max(0, ((base - budget) / base) * 100));
-  });
+  const isBroke        = budget <= 5000;
+  const isCritical     = base > 0 && budget / base < 0.15;
+
+  const spentPct = base <= 0 ? 100 : Math.min(100, Math.max(0, ((base - budget) / base) * 100));
 
   return (
-    <header className="w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md px-5 py-5 shrink-0">
+    <header
+      className={`w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md px-5 py-5 shrink-0 transition-shadow duration-700 ${
+        isCritical ? 'shadow-[inset_0_0_50px_rgba(220,38,38,0.2)]' : ''
+      }`}
+    >
       {/* Top bar */}
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] font-mono tracking-[0.25em] uppercase text-zinc-500">
-          Financial_Status.exe
+          BROKE.AI // STATUS_CHECK
         </span>
         <span className={`text-[10px] font-mono tracking-widest uppercase ${days <= 3 ? 'text-red-600' : 'text-zinc-500'}`}>
           {days}d to payday
@@ -54,12 +68,14 @@ export default function SurvivalHeader() {
             <span className="text-2xl font-black text-zinc-600 font-mono">₹</span>
             <motion.span
               animate={controls}
-              className={`text-5xl font-black leading-none font-mono tabular-nums tracking-tighter ${
-                isBroke ? 'text-red-500' : 'text-zinc-200'
+              className={`text-5xl font-black leading-none font-mono tabular-nums tracking-tighter transition-colors duration-150 ${
+                isFlashing || isBroke ? 'text-red-500' : 'text-zinc-200'
               }`}
             >
               {Math.abs(budget).toLocaleString('en-IN')}
-              {budget < 0 && <span className="text-lg ml-1 text-red-600">deficit</span>}
+              {budget < 0 && (
+                <span className="text-lg ml-1 font-normal text-red-600">deficit</span>
+              )}
             </motion.span>
           </div>
         </div>
@@ -78,7 +94,7 @@ export default function SurvivalHeader() {
       {/* Stress bar */}
       <div className="mt-4 h-[3px] w-full bg-zinc-800 rounded-full overflow-hidden">
         <motion.div
-          className={`h-full rounded-full ${isBroke ? 'bg-red-500' : 'bg-red-700/70'}`}
+          className={`h-full rounded-full ${isCritical ? 'bg-red-500' : isBroke ? 'bg-red-600' : 'bg-red-700/70'}`}
           animate={{ width: `${spentPct}%` }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
         />

@@ -1,13 +1,22 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Copy, Check } from 'lucide-react';
 import { useStore } from '@/lib/store';
 
 export default function RoastFeed() {
-  const history = useStore((s) => s.history);
-  const isTyping = useStore((s) => s.isTyping);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const history       = useStore((s) => s.history);
+  const isTyping       = useStore((s) => s.isTyping);
+  const typingMessage  = useStore((s) => s.typingMessage);
+  const bottomRef      = useRef<HTMLDivElement>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const handleCopy = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -79,8 +88,17 @@ export default function RoastFeed() {
                         Financial Interrogator
                       </span>
                     </div>
-                    <div className="bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md">
-                      <p className="font-mono text-sm leading-relaxed">{item.aiRoast}</p>
+                    <div className="bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md relative group/roast">
+                      <p className="font-mono text-sm leading-relaxed pr-6">{item.aiRoast}</p>
+                      <button
+                        onClick={() => handleCopy(item.id, item.aiRoast!)}
+                        className="absolute bottom-2.5 right-2.5 text-zinc-600 hover:text-white transition-colors p-1 rounded"
+                        title="Copy roast"
+                      >
+                        {copiedId === item.id
+                          ? <Check size={12} className="text-green-500" />
+                          : <Copy size={12} />}
+                      </button>
                     </div>
                   </div>
                 </motion.div>
@@ -105,8 +123,8 @@ export default function RoastFeed() {
                 🔥
               </div>
               <div className="bg-zinc-900 border border-zinc-800 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
-                <span className="text-[11px] font-mono text-zinc-500 tracking-widest">
-                  Financial Interrogator is typing
+                <span className="text-[11px] font-mono text-red-400 tracking-widest animate-pulse">
+                  {typingMessage}
                 </span>
                 <span className="flex gap-1 items-end">
                   {[0, 0.15, 0.3].map((delay, i) => (

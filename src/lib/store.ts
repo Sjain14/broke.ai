@@ -18,6 +18,7 @@ interface Settings {
 interface BudgetState extends Settings {
   history: HistoryItem[];
   isTyping: boolean;
+  typingMessage: string;
 
   // Computed getters
   remainingBudget: () => number;
@@ -28,7 +29,7 @@ interface BudgetState extends Settings {
   deleteExpense: (id: string) => void;
   updateExpense: (id: string, newName: string, newAmount: number) => void;
   setAiRoast: (id: string, roast: string) => void;
-  setIsTyping: (isTyping: boolean) => void;
+  setIsTyping: (isTyping: boolean, message?: string) => void;
   updateSettings: (settings: Partial<Settings>) => void;
 }
 
@@ -37,13 +38,31 @@ function defaultPayday(): Date {
   return new Date(d.getFullYear(), d.getMonth() + 1, 1);
 }
 
+const SEED_HISTORY: HistoryItem[] = [
+  {
+    id: 'seed-1',
+    expenseName: 'Artisan Coffee',
+    amount: 400,
+    aiRoast: '₹400 for bean water? Your bloodline survived on tap water. Grow up.',
+    timestamp: Date.now() - 1000 * 60 * 60 * 3,
+  },
+  {
+    id: 'seed-2',
+    expenseName: 'Farzi Cafe Apps',
+    amount: 2500,
+    aiRoast: "Deconstructed samosas for ₹2500? The only thing deconstructed is your credit score.",
+    timestamp: Date.now() - 1000 * 60 * 30,
+  },
+];
+
 export const useStore = create<BudgetState>((set, get) => ({
   salary: 100000,
   fixedExpenses: 60000,
   investments: 10000,
   payday: defaultPayday(),
-  history: [],
+  history: SEED_HISTORY,
   isTyping: false,
+  typingMessage: 'Financial Interrogator is typing...',
 
   remainingBudget: () => {
     const { salary, fixedExpenses, investments, history } = get();
@@ -79,9 +98,7 @@ export const useStore = create<BudgetState>((set, get) => ({
   updateExpense: (id, newName, newAmount) =>
     set((state) => ({
       history: state.history.map((item) =>
-        item.id === id
-          ? { ...item, expenseName: newName, amount: newAmount }
-          : item
+        item.id === id ? { ...item, expenseName: newName, amount: newAmount } : item
       ),
     })),
 
@@ -92,7 +109,11 @@ export const useStore = create<BudgetState>((set, get) => ({
       ),
     })),
 
-  setIsTyping: (isTyping) => set({ isTyping }),
+  setIsTyping: (isTyping, message) =>
+    set({
+      isTyping,
+      typingMessage: message ?? 'Financial Interrogator is typing...',
+    }),
 
   updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
 }));
