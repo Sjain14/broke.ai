@@ -15,7 +15,8 @@ export async function generateToxicRoast(
   remainingBudget: number,
   daysLeft: number,
   totalBudget: number,
-  type: 'expense' | 'help'
+  type: 'expense' | 'help',
+  toxicity: 'passive' | 'ruthless' | 'nuclear' = 'ruthless'
 ): Promise<{ roast: string; summarizedItem: string }> {
   const pctLeft = totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0;
   const daily = daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget;
@@ -37,9 +38,17 @@ export async function generateToxicRoast(
     }
   }
 
+  const toxicityRule =
+    toxicity === 'passive'
+      ? "TONE OVERRIDE: Be subtle and passive-aggressive. Use 'I'm not mad, just disappointed' energy. No yelling. Quiet, cutting remarks only."
+      : toxicity === 'nuclear'
+      ? "TONE OVERRIDE: Go FULL SAVAGE. Personal insults about their life choices. No mercy. Nuclear-level destruction of their ego. Use ALL CAPS for emphasis. Make them question their entire existence."
+      : "TONE OVERRIDE: Standard brutal persona. Witty, sharp, relentless."; // ruthless default
+
   const prompt = `You are BROKE.AI, a sassy, hyper-intelligent financial manager.
 CURRENT REALITY: ₹${remainingBudget} left (${pctLeft.toFixed(1)}% of budget). ${daysLeft} days to payday. Daily allowance: ₹${daily.toFixed(0)}.
 BEHAVIORAL DIRECTIVE: ${moodRules}
+${toxicityRule}
 USER INPUT: ${item} (Amount: ₹${amount})
 OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy 2-3 word title. IMPORTANT: The "item" field in the JSON must be DIRECT, LITERAL, and DESCRIPTIVE. Do NOT use sarcasm or metaphors here. If the user bought Zara clothes, the item is "Zara Shopping". If they had dinner, it is "Dinner Out". Save all sarcasm for the "roast" field only. Return ONLY a raw JSON object: { "item": "Literal Summary", "roast": "Your dynamic response" }`;
 

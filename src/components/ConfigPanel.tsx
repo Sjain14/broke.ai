@@ -39,13 +39,13 @@ function Field({ label, icon, value, onChange, prefix, type = 'number' }: FieldP
 }
 
 export default function ConfigPanel() {
-  const { salary, fixedExpenses, investments, payday, updateSettings } = useStore();
+  const { salary, fixedExpenses, investments, payday, updateSettings, toxicityLevel, setToxicity, setRunTour } = useStore();
 
   const [localSalary, setLocalSalary] = useState(String(salary));
   const [localFixed, setLocalFixed] = useState(String(fixedExpenses));
   const [localInvest, setLocalInvest] = useState(String(investments));
   const [localPayday, setLocalPayday] = useState(
-    payday.toISOString().split('T')[0]
+    new Date(payday).toISOString().split('T')[0]
   );
 
   const handleApply = () => {
@@ -60,7 +60,7 @@ export default function ConfigPanel() {
   const discretionary = (parseFloat(localSalary) || 0) - (parseFloat(localFixed) || 0) - (parseFloat(localInvest) || 0);
 
   return (
-    <div className="border-t border-zinc-800 bg-zinc-900/40 px-5 py-5 space-y-5">
+    <div id="config-panel" className="border-t border-zinc-800 bg-zinc-900/40 px-5 py-5 space-y-5">
       {/* Section header */}
       <div className="flex items-center gap-2">
         <SlidersHorizontal size={13} className="text-red-700" />
@@ -100,6 +100,30 @@ export default function ConfigPanel() {
         />
       </div>
 
+      {/* Toxicity Toggle */}
+      <div id="toxicity-slider" className="space-y-2">
+        <label className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-500">
+          ⚗️ Interrogation Intensity
+        </label>
+        <div className="flex rounded-lg overflow-hidden border border-zinc-800">
+          {(['passive', 'ruthless', 'nuclear'] as const).map((level) => (
+            <button
+              key={level}
+              onClick={() => setToxicity(level)}
+              className={`flex-1 py-2 text-[10px] font-mono uppercase tracking-widest transition-colors ${
+                toxicityLevel === level
+                  ? level === 'passive' ? 'bg-zinc-700 text-zinc-200'
+                  : level === 'ruthless' ? 'bg-red-900/70 text-red-300'
+                  : 'bg-red-950 text-red-400 font-bold'
+                  : 'bg-zinc-950 text-zinc-600 hover:text-zinc-400'
+              }`}
+            >
+              {level === 'passive' ? '😐 Passive' : level === 'ruthless' ? '🔥 Ruthless' : '☢️ Nuclear'}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Preview row */}
       <div className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 space-y-1">
         <p className="text-[9px] font-mono uppercase tracking-widest text-zinc-600">
@@ -120,6 +144,13 @@ export default function ConfigPanel() {
       >
         Apply &amp; Recalculate
       </motion.button>
+
+      <button
+        onClick={() => setRunTour(true)}
+        className="w-full py-2 bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
+      >
+        📖 How to Use
+      </button>
     </div>
   );
 }

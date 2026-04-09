@@ -39,6 +39,7 @@ export default function ConfessionBox() {
   const fixedExpenses = useStore((s) => s.fixedExpenses);
   const investments   = useStore((s) => s.investments);
   const totalBudget   = salary - fixedExpenses - investments;
+  const toxicityLevel = useStore((s) => s.toxicityLevel);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -96,7 +97,7 @@ export default function ConfessionBox() {
         
         setIsTyping(true, 'Drafting the perfect insult...');
         try {
-          const aiData = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense');
+          const aiData = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense', toxicityLevel);
           if (id) {
             setAiRoast(id, aiData.roast);
             setSummary(id, aiData.summarizedItem);
@@ -122,7 +123,7 @@ export default function ConfessionBox() {
       
       setIsTyping(true, 'Consulting the oracle of financial doom...');
       try {
-        const aiData = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help');
+        const aiData = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help', toxicityLevel);
         if (id) {
           setAiRoast(id, aiData.roast);
           setSummary(id, aiData.summarizedItem);
@@ -186,7 +187,7 @@ export default function ConfessionBox() {
   return (
     <div className="border-t border-zinc-800 bg-zinc-950 px-4 py-4 shrink-0">
       {/* Quick Actions Row */}
-      <div className="flex flex-wrap gap-2 mb-2">
+      <div id="quick-actions" className="flex flex-wrap gap-2 mb-2">
         <button
           onClick={() => { setInput(prev => '/confess ' + prev.replace(/^\/(confess|status|help)\s*/, '')); inputRef.current?.focus(); }}
           disabled={isSubmitting}

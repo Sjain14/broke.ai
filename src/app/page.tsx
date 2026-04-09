@@ -8,8 +8,12 @@ import ExpenseLedger from '@/components/ExpenseLedger';
 import RoastFeed from '@/components/RoastFeed';
 import ConfessionBox from '@/components/ConfessionBox';
 import { GripVertical } from 'lucide-react';
+import OnboardingTour from '@/components/OnboardingTour';
 
 export default function Home() {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => { setIsMounted(true); }, []);
+
   const salary        = useStore((s) => s.salary);
   const fixedExpenses = useStore((s) => s.fixedExpenses);
   const investments   = useStore((s) => s.investments);
@@ -20,8 +24,8 @@ export default function Home() {
   const remainingBudget = totalBudget - spent;
   const isAlert         = remainingBudget < totalBudget * 0.15;
 
-  const [leftWidth, setLeftWidth] = useState(320);
-  const [rightWidth, setRightWidth] = useState(400);
+  const [leftWidth, setLeftWidth] = useState(400);
+  const [rightWidth, setRightWidth] = useState(600);
 
   const isDraggingLeft = useRef(false);
   const isDraggingRight = useRef(false);
@@ -51,9 +55,13 @@ export default function Home() {
     };
   }, []);
 
+  if (!isMounted) return <div className="h-screen bg-zinc-950" />;
+
   return (
-    <div 
-      className={`h-screen overflow-hidden bg-zinc-950${isAlert ? ' alert-mode' : ''}`}
+    <>
+      <OnboardingTour />
+      <div 
+        className={`h-screen overflow-hidden bg-zinc-950${isAlert ? ' alert-mode' : ''}`}
       style={{
         display: "grid",
         gridTemplateColumns: `${leftWidth}px 4px 1fr 4px ${rightWidth}px`
@@ -104,5 +112,6 @@ export default function Home() {
       </div>
 
     </div>
+    </>
   );
 }

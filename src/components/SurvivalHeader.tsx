@@ -23,6 +23,21 @@ export default function SurvivalHeader() {
   // Starting discretionary budget (no ad-hoc expenses)
   const base = salary - fixedExpenses - investments;
 
+  // Bankruptcy projection
+  const history = useStore((s) => s.history);
+  const expenses = history.filter(i => i.type === 'expense' && i.amount > 0);
+  const totalSpent = salary - fixedExpenses - investments - budget;
+  let bankruptcyLabel = 'Survival: Uncertain';
+  if (expenses.length >= 2) {
+    const first = expenses[0].timestamp;
+    const daysSinceFirst = Math.max(1, (Date.now() - first) / (1000 * 60 * 60 * 24));
+    const avgSpend = totalSpent / daysSinceFirst;
+    if (avgSpend > 0 && budget > 0) {
+      const daysUntilBroke = budget / avgSpend;
+      bankruptcyLabel = `${daysUntilBroke.toFixed(1)} DAYS`;
+    }
+  }
+
   useEffect(() => {
     if (budget < prevBudget.current) {
       setIsFlashing(true);
@@ -52,6 +67,7 @@ export default function SurvivalHeader() {
 
   return (
     <header
+      id="survival-header"
       className={`w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md px-5 py-5 shrink-0 transition-shadow duration-700 ${
         isCritical ? 'shadow-[inset_0_0_50px_rgba(220,38,38,0.2)]' : ''
       }`}
@@ -97,6 +113,16 @@ export default function SurvivalHeader() {
         >
           {emoji}
         </motion.div>
+      </div>
+
+      {/* Bankruptcy Projection */}
+      <div className="mt-2 flex items-center gap-2">
+        <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-zinc-700">Projected Bankruptcy:</span>
+        <span className={`text-[9px] font-mono font-bold tracking-widest uppercase ${
+          bankruptcyLabel === 'Survival: Uncertain' ? 'text-zinc-600' : parseFloat(bankruptcyLabel) < 7 ? 'text-red-500 animate-pulse' : 'text-orange-500'
+        }`}>
+          {bankruptcyLabel}
+        </span>
       </div>
 
       {/* Stress bar */}

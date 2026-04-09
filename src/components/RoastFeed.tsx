@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Copy, Check, RotateCcw } from 'lucide-react';
 import { useStore, HistoryItem } from '@/lib/store';
 import { generateToxicRoast } from '@/lib/gemini';
+import ReactMarkdown from 'react-markdown';
 
 export default function RoastFeed() {
   const history       = useStore((s) => s.history);
@@ -18,6 +19,7 @@ export default function RoastFeed() {
   const remainingBudget = useStore((s) => s.remainingBudget);
   const totalBudget    = useStore((s) => s.salary - s.fixedExpenses - s.investments);
   const daysLeft       = useStore((s) => s.daysLeft);
+  const toxicityLevel  = useStore((s) => s.toxicityLevel);
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -43,7 +45,8 @@ export default function RoastFeed() {
         remainingBudget(),
         daysLeft(),
         totalBudget,
-        item.type === 'help' ? 'help' : 'expense'
+        item.type === 'help' ? 'help' : 'expense',
+        toxicityLevel
       );
       setAiRoast(item.id, aiData.roast);
       setSummary(item.id, aiData.summarizedItem);
@@ -161,7 +164,9 @@ export default function RoastFeed() {
                       </span>
                     </div>
                     <div className="bg-zinc-900 border border-zinc-800 text-zinc-300 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md relative group/roast">
-                      <p className="font-mono text-sm leading-relaxed pr-14">{item.aiRoast}</p>
+                      <div className="prose prose-invert prose-sm max-w-none text-zinc-300 leading-relaxed space-y-2 prose-strong:text-white prose-strong:font-bold prose-em:italic prose-ol:pl-4 prose-ul:pl-4 prose-li:my-0.5 pr-14">
+                        <ReactMarkdown>{item.aiRoast}</ReactMarkdown>
+                      </div>
                       <div className="absolute bottom-2.5 right-2 flex items-center gap-0.5">
                         <button
                           onClick={() => handleTweet(item.amount, item.aiRoast!)}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, Pencil, Check, X } from 'lucide-react';
+import { Trash2, Pencil, Check, X, Download } from 'lucide-react';
 import { useStore, HistoryItem } from '@/lib/store';
 
 function EditableRow({
@@ -117,13 +117,40 @@ export default function ExpenseLedger() {
   const deleteExpense = useStore((s) => s.deleteExpense);
   const updateExpense = useStore((s) => s.updateExpense);
   const remainingBudget = useStore((s) => s.remainingBudget);
+  const clearAllData = useStore((s) => s.clearAllData);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const totalSpent      = history.filter(i => i.type === 'expense').reduce((sum, i) => sum + i.amount, 0);
-  const validExpenses   = history.filter(i => i.type === 'expense');
+  const totalSpent    = history.filter(i => i.type === 'expense').reduce((sum, i) => sum + i.amount, 0);
+  const validExpenses = history.filter(i => i.type === 'expense');
+
+  const handleClear = () => {
+    if (window.confirm('☢️ NUCLEAR OPTION: Wipe all confessions and reset settings?')) {
+      clearAllData();
+    }
+  };
+
+  const handleExport = () => {
+    const rows = [
+      ['Date', 'Item', 'Amount (₹)', 'Roast'],
+      ...validExpenses.map(i => [
+        new Date(i.timestamp).toLocaleDateString('en-IN'),
+        `"${(i.summary || i.expenseName).replace(/"/g, "'")}"`,
+        i.amount,
+        `"${(i.aiRoast || '').replace(/"/g, "'").replace(/\n/g, ' ')}"`,
+      ]),
+    ];
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `broke-ai-autopsy-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <div className="flex flex-col h-full min-h-0">
+    <div id="expense-ledger" className="flex flex-col h-full min-h-0">
       {/* Column header */}
       <div className="shrink-0 px-4 py-4 border-b border-zinc-800 bg-zinc-950">
         <div className="flex items-center justify-between">
@@ -135,11 +162,28 @@ export default function ExpenseLedger() {
               Financial Autopsy
             </h2>
           </div>
-          <div className="text-right">
-            <p className="text-[9px] font-mono uppercase tracking-widest text-zinc-600">Total Damage</p>
-            <p className="font-mono text-lg font-black text-red-500 tabular-nums">
-              ₹{totalSpent.toLocaleString('en-IN')}
-            </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExport}
+              disabled={validExpenses.length === 0}
+              title="Export CSV"
+              className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-zinc-200 hover:border-zinc-600 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              <Download size={13} />
+            </button>
+            <button
+              onClick={handleClear}
+              title="Clear all data"
+              className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-red-400 hover:border-red-800 transition-colors"
+            >
+              <Trash2 size={13} />
+            </button>
+            <div className="text-right ml-1">
+              <p className="text-[9px] font-mono uppercase tracking-widest text-zinc-600">Total Damage</p>
+              <p className="font-mono text-lg font-black text-red-500 tabular-nums">
+                ₹{totalSpent.toLocaleString('en-IN')}
+              </p>
+            </div>
           </div>
         </div>
       </div>

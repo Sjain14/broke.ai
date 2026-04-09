@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface HistoryItem {
   id: string;
@@ -22,6 +23,9 @@ interface BudgetState extends Settings {
   history: HistoryItem[];
   isTyping: boolean;
   typingMessage: string;
+  toxicityLevel: 'passive' | 'ruthless' | 'nuclear';
+  hasSeenTour: boolean;
+  runTour: boolean;
 
   // Computed getters
   remainingBudget: () => number;
@@ -36,6 +40,10 @@ interface BudgetState extends Settings {
   setExpenseError: (id: string) => void;
   setIsTyping: (isTyping: boolean, message?: string) => void;
   updateSettings: (settings: Partial<Settings>) => void;
+  setToxicity: (level: 'passive' | 'ruthless' | 'nuclear') => void;
+  clearAllData: () => void;
+  setHasSeenTour: (val: boolean) => void;
+  setRunTour: (val: boolean) => void;
 }
 
 function defaultPayday(): Date {
@@ -64,7 +72,7 @@ const SEED_HISTORY: HistoryItem[] = [
   },
 ];
 
-export const useStore = create<BudgetState>((set, get) => ({
+export const useStore = create<BudgetState>()(persist((set, get) => ({
   salary: 100000,
   fixedExpenses: 60000,
   investments: 10000,
@@ -72,6 +80,9 @@ export const useStore = create<BudgetState>((set, get) => ({
   history: SEED_HISTORY,
   isTyping: false,
   typingMessage: 'Financial Interrogator is typing...',
+  toxicityLevel: 'ruthless' as 'passive' | 'ruthless' | 'nuclear',
+  hasSeenTour: false,
+  runTour: false,
 
   remainingBudget: () => {
     const { salary, fixedExpenses, investments, history } = get();
@@ -82,7 +93,7 @@ export const useStore = create<BudgetState>((set, get) => ({
   daysLeft: () => {
     const { payday } = get();
     const now = new Date();
-    const diff = payday.getTime() - now.getTime();
+    const diff = new Date(payday).getTime() - now.getTime();
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   },
 
@@ -141,4 +152,18 @@ export const useStore = create<BudgetState>((set, get) => ({
     }),
 
   updateSettings: (settings) => set((state) => ({ ...state, ...settings })),
-}));
+
+  setToxicity: (level) => set({ toxicityLevel: level }),
+
+  clearAllData: () => set({
+    history: [],
+    salary: 100000,
+    fixedExpenses: 60000,
+    investments: 10000,
+    payday: defaultPayday(),
+    toxicityLevel: 'ruthless',
+  }),
+
+  setHasSeenTour: (val) => set({ hasSeenTour: val }),
+  setRunTour: (val) => set({ runTour: val }),
+}), { name: 'broke-ai-storage' }));

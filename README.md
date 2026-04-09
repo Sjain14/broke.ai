@@ -19,10 +19,15 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 
 ## ☠️ Core Features
 
-*   **🧠 Dynamic Persona Engine:** The AI doesn't just blindly insult you; it adapts to your exact financial reality. If you are entirely broke and buy a ₹10 snack, it destroys you for prioritizing sugar over survival. If you are rich and buy that same snack, it acts dismissive and body-shames the chocolate. 
+*   **🧠 Dynamic Persona Engine:** The AI doesn't just blindly insult you; it adapts to your exact financial reality. If you are entirely broke and buy a ₹10 snack, it destroys you for prioritizing sugar over survival. If you are rich and buy that same snack, it acts dismissive and body-shames the chocolate.
 *   **⚖️ Dual Telegram-Style Modes:** Use `💸 /confess` to declare a purchase and get audited. Use `🆘 /help` when you actually need tough-love financial direction without logging an expense.
 *   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
-*   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone. 
+*   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone.
+*   **🎚️ Toxicity Scaling:** Choose your pain level. Dial the AI's interrogation intensity from `😐 Passive Aggressive` to `🔥 Ruthless` to `☢️ Nuclear Meltdown`. Same expense, radically different psychological damage.
+*   **📉 Bankruptcy Projection:** Real-time calculation showing exactly how many days you have left until total ruin, based on your current spending velocity — updated live with every confession.
+*   **🧹 Burn The Evidence & Export:** Need to hide your tracks? Clear your entire history with one click, or export your complete *Financial Autopsy* to a CSV — dates, items, amounts, and the full AI roast included.
+*   **🖥️ Pro Workspace Layout:** Fully draggable, resizable split-pane desktop UI with three independent columns. Feels like a premium SaaS productivity tool. Except it hates you.
+*   **🛡️ Local-First Privacy:** Zero backend databases. No creepy tracking. All your financial sins are stored securely in your browser's local storage. Refresh the page? Your debt is still there waiting for you.
 
 ---
 
@@ -58,6 +63,24 @@ What we built for this hackathon is just the MVP. Here is where the platform goe
 *   **📧 Automated Email Interception:** Integrate with Google Workspace APIs to auto-read Zomato, Swiggy, and Amazon receipts. The second the email hits your inbox, Broke.AI sends you a WhatsApp push notification roasting you while the delivery guy is still on his way.
 *   **🛑 OTP / SMS Gateway Hijacking:** By wrapping around Twilio or native Mobile APIs, Broke.AI intercepts bank OTPs. When you try to make an impulsive purchase online, it halts the transaction: *"Are you seriously trying to spend ₹5000 on shoes right now? You only have ₹2000 left for the next 15 days. Type 'I HAVE NO SELF CONTROL' to receive your OTP."*
 *   **📉 Automated SIP Shaming:** If the system detects you skipped your monthly investments via automated bank syncs, it locks you out of your discretionary allowance tracker entirely until you invest.
+
+---
+
+## 📖 How to Use
+
+1. **Configure Reality:** Use the left panel to input your monthly salary, fixed expenses (rent, subscriptions), SIP investments, and your next payday date. Hit **Apply & Recalculate**.
+
+2. **Set the Mood:** Choose your AI Toxicity level under *Interrogation Intensity*. We recommend `🔥 Ruthless`. If you have strong feelings, try `☢️ Nuclear`.
+
+3. **Start the Interrogation** using the chat box on the right:
+   - Click `💸 /confess` and type your expense (e.g., `/confess 900 on mocktails`) to log the spend and receive an immediate AI audit.
+   - Click `🆘 /help` followed by your question (e.g., `/help should I go out tonight?`) to get financial advice without logging a spend.
+   - Click `📊 /status` for an instant, context-aware reality check on your remaining daily allowance and financial standing.
+   - Or just **upload a receipt photo** using the 📷 camera icon — the Vision AI will extract, log, and roast it automatically.
+
+4. **Analyze the Damage:** Watch your Expense Ledger (middle column) update dynamically. Monitor your Projected Bankruptcy countdown in the top-left panel. If things get dark, export the **Financial Autopsy CSV** or wipe everything with the 🗑 button.
+
+> 💡 **Lost?** Hit the `📖 How to Use` button at the bottom of the left config panel to re-trigger the interactive UI tour.
 
 ---
 
