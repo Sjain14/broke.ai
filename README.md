@@ -24,30 +24,31 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 *   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
 *   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone. 
 
-<img width="1916" height="941" alt="image" src="https://github.com/user-attachments/assets/e50348e6-4f29-4e5d-942a-1ba05b1b552b" />
+---
 
+## 🧠 Context-Aware Persona: The "Mood" Shift
+Below is a demonstration of how the AI's intelligence changes based on your bank balance. Even with the same prompt, the response evolves from "Sassy Approval" to "Total Destruction."
 
-
-<img width="1918" height="941" alt="image" src="https://github.com/user-attachments/assets/be65d80e-263f-4534-90da-165dc3903fc4" />
-
-
-
-
-<img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/dad0c83d-dd10-4428-9ee4-51b21101502a" />
-
-
-
-<img width="1919" height="934" alt="image" src="https://github.com/user-attachments/assets/4b269f06-2e80-4726-a97a-e70945c6405d" />
-
-<img width="478" height="176" alt="image" src="https://github.com/user-attachments/assets/6e3e6bf6-6eb3-4979-b25e-c183fed86316" />
-
-<img width="475" height="233" alt="image" src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" />
-<img width="479" height="231" alt="image" src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" />
-<img width="470" height="222" alt="image" src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" />
-
-
+| 🟢 Phase 1: High Budget Tolerance | 🔴 Phase 2: The Impulse Trap |
+| :--- | :--- |
+| **Prompt:** "Can I eat outside?" <br> **Status:** ₹27,100 left. <br> **AI:** Sassy, mathematically allowing, but warns about your future. | **Action:** Spent ₹20,199 on a Zara dress. <br> **Ledger Name:** *Polyester Poverty* (Auto-generated). <br> **AI:** Nuclear meltdown mode triggered. |
+| <img src="https://github.com/user-attachments/assets/e50348e6-4f29-4e5d-942a-1ba05b1b552b" width="100%" /> | <img src="https://github.com/user-attachments/assets/be65d80e-263f-4534-90da-165dc3903fc4" width="100%" /> |
+| **Phase 3: Low Budget Reality** | **Phase 4: Sarcastic Discipline** |
+| **Prompt:** (Same as Phase 1) "Can I eat outside?" <br> **Status:** ₹6,901 left. <br> **AI:** Absolute denial. Commands you to stay home. | **Action:** Saved money on dinner (Spent ₹260). <br> **Ledger Name:** *Dynamite Friends* (Auto-generated). <br> **AI:** Roasts you for "begging for ₹10" despite the save. |
+| <img src="https://github.com/user-attachments/assets/dad0c83d-dd10-4428-9ee4-51b21101502a" width="100%" /> | <img src="https://github.com/user-attachments/assets/4b269f06-2e80-4726-a97a-e70945c6405d" width="100%" /> |
 
 ---
+
+## 📊 Visual Stress Indicators (Header Evolution)
+The UI doesn't just show numbers; it changes its visual "blood pressure" as you near bankruptcy.
+
+| **Healthy (Relieved)** | **Warning (Nervous)** | **Bankrupt (Dead)** | **Deficit (On Fire)** |
+| :---: | :---: | :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/39bd4d82-6b60-438e-bfcd-e22a3dce477e" width="100%" /> | <img src="https://github.com/user-attachments/assets/b1d2edf6-29e8-4e18-9ef0-ccad77cb368c" width="100%" /> | <img src="https://github.com/user-attachments/assets/918ef413-7673-44f0-b7d6-699be7cf7405" width="100%" /> | <img src="https://github.com/user-attachments/assets/dad0c83d-dd10-4428-9ee4-51b21101502a" width="100%" /> |
+| **"You're okay... for now."** | **"The sweat is real."** | **"Game over, man."** | **"Burning your savings."** |
+
+---
+
 
 ## 🔮 The Future: Our Diabolical Roadmap
 
