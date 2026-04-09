@@ -33,6 +33,9 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 <img width="1919" height="942" alt="image" src="https://github.com/user-attachments/assets/8ef7b41d-ff4c-4e0e-ae7b-b03a98fc8522" />
 
 
+<img width="1919" height="941" alt="image" src="https://github.com/user-attachments/assets/6bb4011b-28d2-4826-aea5-b6efb857d637" />
+
+
 ---
 
 ## 🔮 The Future: Our Diabolical Roadmap
