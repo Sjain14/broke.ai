@@ -84,6 +84,15 @@ What we built for this hackathon is just the MVP. Here is where the platform goe
 
 ---
 
+## 🏗️ End-to-End Independence
+
+Broke.AI was built to survive. It operates completely independently of expensive backend hosting:
+*   **Bring Your Own Key (BYOK):** The platform prompts users to input their own Gemini 3.0 API tokens explicitly stored into their browser's secure context. We bypass central token exhaustion and quotas entirely.
+*   **Local-First Architecture:** Every single financial calculation, budget state, and chronological record is securely processed strictly within your browser's LocalStorage. No financial data ever leaves your machine.
+*   **🔐 Supabase Anonymous Auth + RLS:** Lightweight telemetry (user onboarding, feedback, and feature usage metrics) is tracked via a Supabase instance secured with **Row Level Security (RLS)**. Every browser session is assigned a unique anonymous UUID via `signInAnonymously()`, ensuring each user's telemetry is siloed into their own private data partition with zero cross-user visibility.
+
+---
+
 ## 🚀 Local Setup
 
 Want to get abused locally? It takes less than 60 seconds.

@@ -9,10 +9,14 @@ import RoastFeed from '@/components/RoastFeed';
 import ConfessionBox from '@/components/ConfessionBox';
 import { GripVertical } from 'lucide-react';
 import OnboardingTour from '@/components/OnboardingTour';
+import { ensureAuth } from '@/lib/supabase';
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => { setIsMounted(true); }, []);
+  useEffect(() => {
+    setIsMounted(true);
+    ensureAuth();
+  }, []);
 
   const salary        = useStore((s) => s.salary);
   const fixedExpenses = useStore((s) => s.fixedExpenses);

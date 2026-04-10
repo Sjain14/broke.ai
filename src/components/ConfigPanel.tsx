@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Wallet, Home, TrendingUp, CalendarDays, SlidersHorizontal } from 'lucide-react';
 import { useStore } from '@/lib/store';
 
@@ -39,7 +39,10 @@ function Field({ label, icon, value, onChange, prefix, type = 'number' }: FieldP
 }
 
 export default function ConfigPanel() {
-  const { salary, fixedExpenses, investments, payday, updateSettings, toxicityLevel, setToxicity, setRunTour } = useStore();
+  const { salary, fixedExpenses, investments, payday, updateSettings, toxicityLevel, setToxicity, setRunTour, customApiKey, setCustomApiKey } = useStore();
+
+  const [showKeyModal, setShowKeyModal] = useState(false);
+  const [localKey, setLocalKey] = useState(customApiKey);
 
   const [localSalary, setLocalSalary] = useState(String(salary));
   const [localFixed, setLocalFixed] = useState(String(fixedExpenses));
@@ -145,12 +148,79 @@ export default function ConfigPanel() {
         Apply &amp; Recalculate
       </motion.button>
 
-      <button
-        onClick={() => setRunTour(true)}
-        className="w-full py-2 bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
-      >
-        📖 How to Use
-      </button>
+      <div className="flex gap-2 w-full mt-2">
+        <button
+          onClick={() => setRunTour(true)}
+          className="flex-1 py-2 bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
+        >
+          📖 How to Use
+        </button>
+        <button
+          onClick={() => setShowKeyModal(true)}
+          className="flex-1 py-2 bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
+        >
+          🔑 Custom API Key
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {showKeyModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="bg-zinc-950 border border-zinc-800 p-6 rounded-xl w-full max-w-sm space-y-4"
+            >
+              <div>
+                <h3 className="font-mono font-bold text-zinc-200">Bring Your Own Key</h3>
+                <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-widest">
+                  Override default usage limits
+                </p>
+              </div>
+
+              <input
+                type="password"
+                value={localKey}
+                onChange={(e) => setLocalKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2.5 font-mono text-sm text-zinc-200 outline-none focus:border-red-700"
+              />
+
+              <p className="text-xs font-mono text-zinc-500 leading-relaxed pt-1">
+                Your key is stored strictly in your browser's local storage. We do not track it.
+              </p>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => {
+                    setCustomApiKey(localKey);
+                    setShowKeyModal(false);
+                  }}
+                  className="flex-1 bg-red-900/60 hover:bg-red-800/70 border border-red-800/60 text-red-300 font-mono text-[10px] uppercase tracking-widest py-2 rounded-lg transition-colors"
+                >
+                  Save Key
+                </button>
+                <button
+                  onClick={() => {
+                    setLocalKey("");
+                    setCustomApiKey("");
+                    setShowKeyModal(false);
+                  }}
+                  className="flex-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 font-mono text-[10px] uppercase tracking-widest py-2 rounded-lg transition-colors"
+                >
+                  Clear Default
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

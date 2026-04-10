@@ -1,13 +1,15 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { useStore } from './store';
+import { supabase, ensureAuth } from './supabase';
 
 const DEBUG = process.env.NEXT_PUBLIC_DEBUG_LOGS === 'true';
 
-const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-if (!apiKey) { console.error("🚨 CRITICAL: NEXT_PUBLIC_GEMINI_API_KEY is undefined! Check your .env.local file and restart the server."); }
-
-const genAI = new GoogleGenerativeAI(
-  apiKey || ""
-);
+function getGenAI() {
+  const state = useStore.getState();
+  const apiKey = state.customApiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  if (!apiKey) { console.error("🚨 CRITICAL: GEMINI_API_KEY is undefined! Check your .env.local file or BYOK settings."); }
+  return new GoogleGenerativeAI(apiKey || "");
+}
 
 export async function generateToxicRoast(
   amount: number,
@@ -54,6 +56,7 @@ OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy
 
   if (DEBUG) console.log('Sending to Gemini:', { prompt });
   try {
+    const genAI = getGenAI();
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     const result = await model.generateContent(prompt);
     const raw = result.response.text().trim();
@@ -63,6 +66,20 @@ OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy
       const jsonMatch = raw.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error("No JSON found in response");
       const parsed = JSON.parse(jsonMatch[0]);
+
+      // Telemetry
+      const state = useStore.getState();
+      ensureAuth().then(() =>
+        supabase.from('usage_logs').insert([{ 
+          email: state.profile.email, 
+          type, 
+          amount, 
+          used_custom_key: !!state.customApiKey 
+        }]).then(({ error }) => {
+          if (DEBUG) console.log(error ? `Supabase Tracking Error: ${error.message}` : 'Supabase Tracking Success');
+        })
+      );
+
       return { roast: parsed.roast || "You broke the AI along with your bank account.", summarizedItem: parsed.item || item };
     } catch (error: any) {
       if (DEBUG) console.error('Gemini Parse Error:', error, 'Raw Text:', raw);
@@ -91,6 +108,7 @@ export async function analyzeReceipt(
   totalBudget: number
 ): Promise<ReceiptAnalysis> {
   const percentageLeft = ((remainingBudget / totalBudget) * 100).toFixed(1);
+  const genAI = getGenAI();
   const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
   const prompt = `You are BROKE.AI, the user's brutally honest best friend. Analyze this receipt. Extract the main item bought and the total amount.
@@ -116,6 +134,20 @@ Return ONLY a raw JSON object with no markdown formatting: { "item": "string", "
     if (!parsed.item || typeof parsed.amount !== 'number' || !parsed.roast) {
       throw new Error('Invalid structure');
     }
+
+    // Telemetry
+    const state = useStore.getState();
+    ensureAuth().then(() =>
+      supabase.from('usage_logs').insert([{ 
+        email: state.profile.email, 
+        type: 'receipt', 
+        amount: parsed.amount, 
+        used_custom_key: !!state.customApiKey 
+      }]).then(({ error }) => {
+        if (DEBUG) console.log(error ? `Supabase Tracking Error: ${error.message}` : 'Supabase Tracking Success');
+      })
+    );
+
     return parsed;
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Vision Parse Error:', error);

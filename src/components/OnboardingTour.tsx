@@ -87,6 +87,8 @@ export default function OnboardingTour() {
           arrowColor: '#18181b',
           overlayColor: 'rgba(0,0,0,0.65)',
         },
+        beaconInner: { backgroundColor: '#ef4444' },
+        beaconOuter: { borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.2)' },
         tooltip: {
           borderRadius: 12,
           padding: '16px 20px',

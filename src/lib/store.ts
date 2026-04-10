@@ -26,6 +26,8 @@ interface BudgetState extends Settings {
   toxicityLevel: 'passive' | 'ruthless' | 'nuclear';
   hasSeenTour: boolean;
   runTour: boolean;
+  customApiKey: string;
+  profile: { name: string; email: string; isComplete: boolean };
 
   // Computed getters
   remainingBudget: () => number;
@@ -44,6 +46,8 @@ interface BudgetState extends Settings {
   clearAllData: () => void;
   setHasSeenTour: (val: boolean) => void;
   setRunTour: (val: boolean) => void;
+  setCustomApiKey: (key: string) => void;
+  updateProfile: (name: string, email: string) => void;
 }
 
 function defaultPayday(): Date {
@@ -83,6 +87,8 @@ export const useStore = create<BudgetState>()(persist((set, get) => ({
   toxicityLevel: 'ruthless' as 'passive' | 'ruthless' | 'nuclear',
   hasSeenTour: false,
   runTour: false,
+  customApiKey: '',
+  profile: { name: '', email: '', isComplete: false },
 
   remainingBudget: () => {
     const { salary, fixedExpenses, investments, history } = get();
@@ -166,4 +172,6 @@ export const useStore = create<BudgetState>()(persist((set, get) => ({
 
   setHasSeenTour: (val) => set({ hasSeenTour: val }),
   setRunTour: (val) => set({ runTour: val }),
+  setCustomApiKey: (key: string) => set({ customApiKey: key }),
+  updateProfile: (name, email) => set({ profile: { name, email, isComplete: true } }),
 }), { name: 'broke-ai-storage' }));
