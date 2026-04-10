@@ -23,11 +23,14 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 *   **⚖️ Dual Telegram-Style Modes:** Use `💸 /confess` to declare a purchase and get audited. Use `🆘 /help` when you actually need tough-love financial direction without logging an expense.
 *   **📸 Receipt Vision Parsing:** Don't want to type? Upload a picture of your physical receipt. The Gemini 3.0 Vision model will automatically extract the core damage and roast you for it instantly.
 *   **🚨 Panic UI:** State-driven Framer Motion and CSS red-alerts trigger literal physical stress when your budget drops into the danger zone.
-*   **🎚️ Toxicity Scaling:** Choose your pain level. Dial the AI's interrogation intensity from `😐 Passive Aggressive` to `🔥 Ruthless` to `☢️ Nuclear Meltdown`. Same expense, radically different psychological damage.
-*   **📉 Bankruptcy Projection:** Real-time calculation showing exactly how many days you have left until total ruin, based on your current spending velocity — updated live with every confession.
-*   **🧹 Burn The Evidence & Export:** Need to hide your tracks? Clear your entire history with one click, or export your complete *Financial Autopsy* to a CSV — dates, items, amounts, and the full AI roast included.
-*   **🖥️ Pro Workspace Layout:** Fully draggable, resizable split-pane desktop UI with three independent columns. Feels like a premium SaaS productivity tool. Except it hates you.
-*   **🛡️ Local-First Privacy:** Zero backend databases. No creepy tracking. All your financial sins are stored securely in your browser's local storage. Refresh the page? Your debt is still there waiting for you.
+*   **🎚️ Toxicity Scaling:** Choose your pain level. Adjust the AI's interrogation intensity from 'Passive Aggressive' to 'Nuclear Meltdown'.
+*   **📉 Bankruptcy Projection:** Real-time calculation showing exactly how many days you have left until total ruin based on your current spending velocity.
+*   **🧹 Burn The Evidence & Export:** Need to hide your tracks? Clear your entire history with one click, or export your 'Financial Autopsy' to CSV for real auditing.
+*   **🖥️ Pro Workspace Layout:** Fully draggable, resizable split-pane desktop UI for a premium SaaS feel.
+*   **🛡️ Local-First Privacy:** Zero backend databases. All your financial sins are stored securely in your browser's local storage. Refresh the page? The trauma remains.
+*   **🧠 Short-Term Memory:** Broke.AI remembers your last 3 transactions. It dynamically weighs its focus (90% on current expenses, 70% on advice) to bring up past mistakes and psychologically break you.
+*   **☁️ Google Drive Auto-Sync:** Opt-in to connect your Google account. Broke.AI will silently backup and restore your financial ledger directly to a private file in your Google Drive. 100% serverless.
+*   **🔑 Bring Your Own Key (BYOK):** Don't want to use our limits? Enter your own Gemini API key. Stored strictly in your browser.
 
 ---
 

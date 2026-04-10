@@ -18,6 +18,7 @@ export async function generateToxicRoast(
   daysLeft: number,
   totalBudget: number,
   type: 'expense' | 'help',
+  recentHistory: { item: string, amount: number, roast: string }[] = [],
   toxicity: 'passive' | 'ruthless' | 'nuclear' = 'ruthless'
 ): Promise<{ roast: string; summarizedItem: string }> {
   const pctLeft = totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0;
@@ -27,6 +28,7 @@ export async function generateToxicRoast(
   let moodRules = "";
   if (type === 'help') {
     moodRules = "Persona: Tough Love Financial Advisor. The user is asking for advice. Don't just insult them—actually answer their question or give financial direction, but wrap it in heavy sarcasm, passive-aggressiveness, and witty roasts.";
+    moodRules += " Focus 70% of your advice on the CURRENT question. Use the remaining 30% to reference their RECENT TRANSACTIONS to point out their ongoing bad habits.";
   } else {
     // type === 'expense'
     if (amount <= 50 && pctLeft > 50) {
@@ -38,7 +40,10 @@ export async function generateToxicRoast(
     } else {
       moodRules = "Persona: Brutal, witty auditor. Roast this purchase based on their remaining daily allowance.";
     }
+    moodRules += " Focus 90% of your roast on the CURRENT purchase. Use the RECENT TRANSACTIONS only as a quick 10% contextual jab to show you remember their past mistakes.";
   }
+
+  const historyText = recentHistory.length > 0 ? "RECENT TRANSACTIONS: " + JSON.stringify(recentHistory) : "No recent history.";
 
   const toxicityRule =
     toxicity === 'passive'
@@ -51,6 +56,7 @@ export async function generateToxicRoast(
 CURRENT REALITY: ₹${remainingBudget} left (${pctLeft.toFixed(1)}% of budget). ${daysLeft} days to payday. Daily allowance: ₹${daily.toFixed(0)}.
 BEHAVIORAL DIRECTIVE: ${moodRules}
 ${toxicityRule}
+${historyText}
 USER INPUT: ${item} (Amount: ₹${amount})
 OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy 2-3 word title. IMPORTANT: The "item" field in the JSON must be DIRECT, LITERAL, and DESCRIPTIVE. Do NOT use sarcasm or metaphors here. If the user bought Zara clothes, the item is "Zara Shopping". If they had dinner, it is "Dinner Out". Save all sarcasm for the "roast" field only. Return ONLY a raw JSON object: { "item": "Literal Summary", "roast": "Your dynamic response" }`;
 

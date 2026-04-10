@@ -39,7 +39,7 @@ function Field({ label, icon, value, onChange, prefix, type = 'number' }: FieldP
 }
 
 export default function ConfigPanel() {
-  const { salary, fixedExpenses, investments, payday, updateSettings, toxicityLevel, setToxicity, setRunTour, customApiKey, setCustomApiKey } = useStore();
+  const { salary, fixedExpenses, investments, payday, updateSettings, toxicityLevel, setToxicity, setRunTour, setHasSeenTour, customApiKey, setCustomApiKey } = useStore();
 
   const [showKeyModal, setShowKeyModal] = useState(false);
   const [localKey, setLocalKey] = useState(customApiKey);
@@ -150,7 +150,7 @@ export default function ConfigPanel() {
 
       <div className="flex gap-2 w-full mt-2">
         <button
-          onClick={() => setRunTour(true)}
+          onClick={() => { setHasSeenTour(false); setRunTour(true); setTimeout(() => window.location.reload(), 100); }}
           className="flex-1 py-2 bg-zinc-900 text-zinc-500 border border-zinc-800 rounded-lg font-mono text-[10px] uppercase tracking-widest hover:bg-zinc-800 hover:text-zinc-300 transition-colors"
         >
           📖 How to Use

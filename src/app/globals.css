@@ -16,3 +16,9 @@
 .alert-mode {
   animation: pulse-red 2s infinite;
 }
+
+/* ── Slim brutalist scrollbars ─────────────────────────────── */
+::-webkit-scrollbar           { width: 6px; height: 6px; }
+::-webkit-scrollbar-track     { background: transparent; }
+::-webkit-scrollbar-thumb     { background: #27272a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #ef4444; }

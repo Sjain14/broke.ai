@@ -28,6 +28,9 @@ interface BudgetState extends Settings {
   runTour: boolean;
   customApiKey: string;
   profile: { name: string; email: string; isComplete: boolean };
+  googleToken: string | null;
+  autoBackupEnabled: boolean;
+  isRestoring: boolean;
 
   // Computed getters
   remainingBudget: () => number;
@@ -48,6 +51,9 @@ interface BudgetState extends Settings {
   setRunTour: (val: boolean) => void;
   setCustomApiKey: (key: string) => void;
   updateProfile: (name: string, email: string) => void;
+  setGoogleToken: (token: string | null) => void;
+  setAutoBackup: (enabled: boolean) => void;
+  setIsRestoring: (val: boolean) => void;
 }
 
 function defaultPayday(): Date {
@@ -89,6 +95,9 @@ export const useStore = create<BudgetState>()(persist((set, get) => ({
   runTour: false,
   customApiKey: '',
   profile: { name: '', email: '', isComplete: false },
+  googleToken: null,
+  autoBackupEnabled: false,
+  isRestoring: false,
 
   remainingBudget: () => {
     const { salary, fixedExpenses, investments, history } = get();
@@ -174,4 +183,7 @@ export const useStore = create<BudgetState>()(persist((set, get) => ({
   setRunTour: (val) => set({ runTour: val }),
   setCustomApiKey: (key: string) => set({ customApiKey: key }),
   updateProfile: (name, email) => set({ profile: { name, email, isComplete: true } }),
+  setGoogleToken: (token) => set({ googleToken: token }),
+  setAutoBackup: (enabled) => set({ autoBackupEnabled: enabled }),
+  setIsRestoring: (val) => set({ isRestoring: val }),
 }), { name: 'broke-ai-storage' }));

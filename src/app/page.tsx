@@ -10,6 +10,7 @@ import ConfessionBox from '@/components/ConfessionBox';
 import { GripVertical } from 'lucide-react';
 import OnboardingTour from '@/components/OnboardingTour';
 import { ensureAuth } from '@/lib/supabase';
+import { backupToDrive } from '@/lib/drive';
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
@@ -22,6 +23,24 @@ export default function Home() {
   const fixedExpenses = useStore((s) => s.fixedExpenses);
   const investments   = useStore((s) => s.investments);
   const history       = useStore((s) => s.history);
+  const autoBackupEnabled = useStore((s) => s.autoBackupEnabled);
+  const googleToken     = useStore((s) => s.googleToken);
+
+  useEffect(() => {
+    if (!autoBackupEnabled || !googleToken) return;
+
+    const syncTimer = setTimeout(async () => {
+      try { 
+        const state = useStore.getState();
+        await backupToDrive(googleToken, JSON.stringify(state)); 
+        console.log("Auto-backed up to Drive"); 
+      } catch (e) { 
+        console.error("Backup failed", e); 
+      }
+    }, 3000);
+
+    return () => clearTimeout(syncTimer);
+  }, [history, autoBackupEnabled, googleToken]);
 
   const totalBudget     = salary - fixedExpenses - investments;
   const spent           = history.reduce((acc, curr) => acc + curr.amount, 0);

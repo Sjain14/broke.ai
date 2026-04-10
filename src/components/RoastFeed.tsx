@@ -39,6 +39,9 @@ export default function RoastFeed() {
     setIsTyping(true, "Retrying the interrogation...");
     
     try {
+      const historyObj = useStore.getState().history;
+      const recentContext = historyObj.slice(-3).map(h => ({ item: h.summary || h.expenseName, amount: h.amount, roast: h.aiRoast || '' }));
+
       const aiData = await generateToxicRoast(
         item.amount,
         item.expenseName,
@@ -46,6 +49,7 @@ export default function RoastFeed() {
         daysLeft(),
         totalBudget,
         item.type === 'help' ? 'help' : 'expense',
+        recentContext,
         toxicityLevel
       );
       setAiRoast(item.id, aiData.roast);
