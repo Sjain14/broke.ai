@@ -9,15 +9,27 @@ import RoastFeed from '@/components/RoastFeed';
 import ConfessionBox from '@/components/ConfessionBox';
 import { GripVertical } from 'lucide-react';
 import OnboardingTour from '@/components/OnboardingTour';
-import { ensureAuth } from '@/lib/supabase';
+import { ensureAuth, supabase } from '@/lib/supabase';
 import { backupToDrive } from '@/lib/drive';
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
+  const setGoogleToken = useStore((s) => s.setGoogleToken);
+
   useEffect(() => {
     setIsMounted(true);
     ensureAuth();
-  }, []);
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.provider_token) { 
+        setGoogleToken(session.provider_token); 
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [setGoogleToken]);
 
   const salary        = useStore((s) => s.salary);
   const fixedExpenses = useStore((s) => s.fixedExpenses);

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
-import { supabase, ensureAuth } from '@/lib/supabase';
+import { supabase, ensureAuth, getURL } from '@/lib/supabase';
 import { CloudUpload, LogIn } from 'lucide-react';
 
 interface ProfileModalProps {
@@ -55,7 +55,8 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
       provider: 'google',
       options: {
         scopes: 'https://www.googleapis.com/auth/drive.file',
-        redirectTo: window.location.origin,
+        redirectTo: getURL(),
+        queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
     if (error) {

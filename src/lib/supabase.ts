@@ -1,5 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 
+export const getURL = () => {
+  let url =
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    process.env.NEXT_PUBLIC_VERCEL_URL ??
+    'http://localhost:3000/';
+  url = url.includes('http') ? url : `https://${url}`;
+  url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
+  return url;
+};
+
 // Fallback to placeholder if environment variables are missing so the client doesn't crash during build/dev
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder';
