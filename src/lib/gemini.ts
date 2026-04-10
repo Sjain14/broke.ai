@@ -18,12 +18,15 @@ export async function generateToxicRoast(
   daysLeft: number,
   totalBudget: number,
   type: 'expense' | 'help',
-  recentHistory: { item: string, amount: number, roast: string }[] = [],
+  recentHistory: { item: string, amount: number, roast?: string }[] = [],
   toxicity: 'passive' | 'ruthless' | 'nuclear' = 'ruthless'
 ): Promise<{ roast: string; summarizedItem: string }> {
   const pctLeft = totalBudget > 0 ? (remainingBudget / totalBudget) * 100 : 0;
   const daily = daysLeft > 0 ? remainingBudget / daysLeft : remainingBudget;
   const costPct = remainingBudget > 0 && amount > 0 ? (amount / remainingBudget) * 100 : 0;
+
+  const minWords = type === 'help' ? (process.env.NEXT_PUBLIC_MIN_WORDS_HELP || 40) : (process.env.NEXT_PUBLIC_MIN_WORDS_CONFESS || 15);
+  const maxWords = type === 'help' ? (process.env.NEXT_PUBLIC_MAX_WORDS_HELP || 100) : (process.env.NEXT_PUBLIC_MAX_WORDS_CONFESS || 40);
 
   let moodRules = "";
   if (type === 'help') {
@@ -58,7 +61,7 @@ BEHAVIORAL DIRECTIVE: ${moodRules}
 ${toxicityRule}
 ${historyText}
 USER INPUT: ${item} (Amount: ₹${amount})
-OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy 2-3 word title. IMPORTANT: The "item" field in the JSON must be DIRECT, LITERAL, and DESCRIPTIVE. Do NOT use sarcasm or metaphors here. If the user bought Zara clothes, the item is "Zara Shopping". If they had dinner, it is "Dinner Out". Save all sarcasm for the "roast" field only. Return ONLY a raw JSON object: { "item": "Literal Summary", "roast": "Your dynamic response" }`;
+OUTPUT FORMAT: You MUST return a STRICT, valid JSON object. No markdown code blocks, no plain text. Your 'roast' response MUST be between ${minWords} and ${maxWords} words long. Example: { "item": "Short Summary", "roast": "Your response here" }`;
 
   if (DEBUG) console.log('Sending to Gemini:', { prompt });
   try {
@@ -91,8 +94,13 @@ OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy
       if (DEBUG) console.error('Gemini Parse Error:', error, 'Raw Text:', raw);
       if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
       if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
-      // If parsing fails, just return the cleaned up raw text as the roast so the UI doesn't break.
-      return { roast: raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim() || "My circuits fried trying to calculate your poverty.", summarizedItem: item.length > 20 ? "Financial Mistake" : item };
+      
+      const roastMatch = raw.match(/roast:\s*([^]*)/i);
+      const itemMatch = raw.match(/item:\s*(.*?)(?:,|$|\n)/i);
+      const extractedRoast = roastMatch ? roastMatch[1].replace(/["'{}]/g, '').trim() : raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim();
+      const extractedItem = itemMatch ? itemMatch[1].replace(/["'{}]/g, '').trim() : (item.length > 20 ? "Financial Mistake" : item);
+      
+      return { roast: extractedRoast || "My circuits fried.", summarizedItem: extractedItem };
     }
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Network Error:', error);
@@ -135,36 +143,47 @@ Return ONLY a raw JSON object with no markdown formatting: { "item": "string", "
     const raw = result.response.text().trim();
     if (DEBUG) console.log('Raw Gemini Response:', raw);
 
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("No JSON found in response");
-    const parsed = JSON.parse(jsonMatch[0]) as ReceiptAnalysis;
+    try {
+      const jsonMatch = raw.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error("No JSON found in response");
+      const parsed = JSON.parse(jsonMatch[0]) as ReceiptAnalysis;
 
-    if (!parsed.item || typeof parsed.amount !== 'number' || !parsed.roast) {
-      throw new Error('Invalid structure');
+      if (!parsed.item || typeof parsed.amount !== 'number' || !parsed.roast) {
+        throw new Error('Invalid structure');
+      }
+
+      // Telemetry
+      const state = useStore.getState();
+      ensureAuth().then(() =>
+        supabase.from('usage_logs').insert([{ 
+          email: state.profile.email, 
+          type: 'receipt', 
+          amount: parsed.amount, 
+          used_custom_key: !!state.customApiKey 
+        }]).then(({ error }) => {
+          if (DEBUG) console.log(error ? `Supabase Tracking Error: ${error.message}` : 'Supabase Tracking Success');
+        })
+      );
+
+      return parsed;
+    } catch (error: any) {
+      if (DEBUG) console.error('Gemini Vision Parse Error:', error);
+      if (error?.message?.includes("403")) return { item: 'error', amount: 0, roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env." };
+      
+      const roastMatch = raw.match(/roast:\s*([^]*)/i);
+      const itemMatch = raw.match(/item:\s*(.*?)(?:,|$|\n)/i);
+      const extractedRoast = roastMatch ? roastMatch[1].replace(/["'{}]/g, '').trim() : raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim();
+      const extractedItem = itemMatch ? itemMatch[1].replace(/["'{}]/g, '').trim() : "unknown purchase";
+      return { item: extractedItem, amount: 0, roast: extractedRoast || "Your receipt is as unreadable as your financial decisions." };
     }
-
-    // Telemetry
-    const state = useStore.getState();
-    ensureAuth().then(() =>
-      supabase.from('usage_logs').insert([{ 
-        email: state.profile.email, 
-        type: 'receipt', 
-        amount: parsed.amount, 
-        used_custom_key: !!state.customApiKey 
-      }]).then(({ error }) => {
-        if (DEBUG) console.log(error ? `Supabase Tracking Error: ${error.message}` : 'Supabase Tracking Success');
-      })
-    );
-
-    return parsed;
   } catch (error: any) {
-    if (DEBUG) console.error('Gemini Vision Parse Error:', error);
+    if (DEBUG) console.error('Gemini Vision Network Error:', error);
     if (error?.message?.includes("403")) return { item: 'error', amount: 0, roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env." };
     if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
     return {
       item: 'unknown purchase',
       amount: 0,
-      roast: "Your receipt is as unreadable as your financial decisions. Truly impressive chaos.",
+      roast: "Even my vision servers can't handle how broke you are. Connection failed.",
     };
   }
 }

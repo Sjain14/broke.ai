@@ -97,11 +97,11 @@ export default function RoastFeed() {
             <div className="flex justify-end">
               <div className="max-w-[75%]">
                 {item.amount === 0 ? (
-                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-mono break-words">
+                  <div className="bg-zinc-800 border border-zinc-700 text-zinc-200 rounded-2xl rounded-tr-sm px-4 py-3 text-sm font-mono break-words whitespace-pre-wrap overflow-hidden max-w-full">
                     {item.expenseName}
                   </div>
                 ) : (
-                  <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40 break-words">
+                  <div className="bg-red-950 border border-red-600/60 text-red-400 rounded-2xl rounded-tr-sm px-4 py-3 shadow-lg shadow-red-950/40 break-words whitespace-pre-wrap overflow-hidden max-w-full">
                     <p className="font-mono text-sm font-semibold tracking-wide">
                       {item.expenseName}
                     </p>
@@ -138,7 +138,7 @@ export default function RoastFeed() {
                       </span>
                     </div>
                     <div className={`border text-zinc-300 rounded-2xl rounded-tl-sm px-4 py-3 shadow-md relative group/roast ${item.status === 'error' ? 'bg-red-950/20 border-red-900/30' : 'bg-zinc-900 border-zinc-800'}`}>
-                      <div className="prose prose-invert prose-sm max-w-none text-zinc-300 leading-relaxed space-y-2 prose-strong:text-white prose-strong:font-bold prose-em:italic prose-ol:pl-4 prose-ul:pl-4 prose-li:my-0.5 pr-14">
+                      <div className="prose prose-invert prose-sm text-zinc-300 leading-relaxed space-y-2 prose-strong:text-white prose-strong:font-bold prose-em:italic prose-ol:pl-4 prose-ul:pl-4 prose-li:my-0.5 pr-14 break-words whitespace-pre-wrap overflow-hidden max-w-full">
                         {item.status === 'error' ? (
                           <>
                             <p className="text-red-400">Even my servers can't handle how broke you are. Connection failed.</p>

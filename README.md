@@ -31,6 +31,9 @@ Traditional budgeting apps are fundamentally broken. They give you a neat little
 *   **🧠 Short-Term Memory:** Broke.AI remembers your last 3 transactions. It dynamically weighs its focus (90% on current expenses, 70% on advice) to bring up past mistakes and psychologically break you.
 *   **☁️ Google Drive Auto-Sync:** Opt-in to connect your Google account. Broke.AI will silently backup and restore your financial ledger directly to a private file in your Google Drive. 100% serverless.
 *   **🔑 Bring Your Own Key (BYOK):** Don't want to use our limits? Enter your own Gemini API key. Stored strictly in your browser.
+*   **⚡ Auto-Healing Payload Parser:** Native RegEx overrides dynamically catch and extract malformed AI-generated JSON outputs before they crash the UI renderer.
+*   **📏 Dynamic AI Constraints:** Strictly controls Gemini logic sizes via Runtime Environment Variables (`MIN_WORDS`/`MAX_WORDS`) directly injected into the prompt headers.
+*   **🧱 Hardware CSS Locks:** Immutable tailwind constraints (`break-words`, `whitespace-pre-wrap`) prevent overflowing or overlapping AI text-spans entirely.
 
 ---
 
