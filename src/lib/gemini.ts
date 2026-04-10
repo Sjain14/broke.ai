@@ -105,6 +105,7 @@ OUTPUT FORMAT: You MUST return a STRICT, valid JSON object. No markdown code blo
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Network Error:', error);
     if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
+    if (error?.status === 429 || error?.message?.includes('429')) throw new Error('Gemini Error: 429');
     if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
     return { roast: "Even my servers can't handle how broke you are. Connection failed — just like your financial planning.", summarizedItem: item };
   }
@@ -179,6 +180,7 @@ Return ONLY a raw JSON object with no markdown formatting: { "item": "string", "
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Vision Network Error:', error);
     if (error?.message?.includes("403")) return { item: 'error', amount: 0, roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env." };
+    if (error?.status === 429 || error?.message?.includes('429')) throw new Error('Gemini Error: 429');
     if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
     return {
       item: 'unknown purchase',

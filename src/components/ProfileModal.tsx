@@ -31,7 +31,9 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
-        if (session?.provider_token) {
+        if (_event === 'SIGNED_OUT' || !session) {
+          setGoogleToken(null);
+        } else if (session?.provider_token) {
           setGoogleToken(session.provider_token);
           const user = session.user;
           const name = user.user_metadata?.full_name || user.user_metadata?.name || '';

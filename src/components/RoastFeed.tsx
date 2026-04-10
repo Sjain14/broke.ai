@@ -54,7 +54,8 @@ export default function RoastFeed() {
       );
       setAiRoast(item.id, aiData.roast);
       setSummary(item.id, aiData.summarizedItem);
-    } catch {
+    } catch (e: any) {
+      useStore.getState().setAiRoast(item.id, e.message || '503');
       setExpenseError(item.id);
     } finally {
       setIsTyping(false);
@@ -143,7 +144,9 @@ export default function RoastFeed() {
                           <>
                             <p className="text-red-400">Even my servers can't handle how broke you are. Connection failed.</p>
                             <p className="text-[10px] text-zinc-500 italic mt-3 opacity-80 border-t border-zinc-800 pt-2">
-                              ⚠️ High global demand (503). Retrying with the same data might work, or use a Custom API Key in Settings.
+                              {item.aiRoast?.includes('429') 
+                                ? "🛑 RATE LIMIT REACHED (429): Google's free tier is exhausted. Please wait 60 seconds before retrying, or enter a Custom API Key in the Config Panel for unlimited roasting." 
+                                : "⚠️ High global demand (503). Retrying with the same data might work, or use a Custom API Key in Settings."}
                             </p>
                           </>
                         ) : (

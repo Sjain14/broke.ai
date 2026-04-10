@@ -21,7 +21,9 @@ export default function Home() {
     ensureAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.provider_token) { 
+      if (event === 'SIGNED_OUT' || !session) {
+        setGoogleToken(null);
+      } else if (session?.provider_token) { 
         setGoogleToken(session.provider_token); 
       }
     });
@@ -46,8 +48,14 @@ export default function Home() {
         const state = useStore.getState();
         await backupToDrive(googleToken, JSON.stringify(state)); 
         console.log("Auto-backed up to Drive"); 
-      } catch (e) { 
-        console.error("Backup failed", e); 
+      } catch (e: any) { 
+        console.error("Backup failed", e);
+        if (e?.message?.includes('401')) {
+          const state = useStore.getState();
+          state.setGoogleToken(null);
+          state.setAutoBackup(false);
+          console.warn('Drive Token 401 Expired. Resetting auth state.');
+        }
       }
     }, 3000);
 

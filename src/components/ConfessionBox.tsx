@@ -105,8 +105,11 @@ export default function ConfessionBox() {
             setAiRoast(id, aiData.roast);
             setSummary(id, aiData.summarizedItem);
           }
-        } catch {
-          if (id) setExpenseError(id);
+        } catch (e: any) {
+          if (id) {
+            useStore.getState().setAiRoast(id, e.message || '503');
+            useStore.getState().setExpenseError(id);
+          }
         } finally {
           setIsTyping(false);
           setIsSubmitting(false);
@@ -134,8 +137,11 @@ export default function ConfessionBox() {
           setAiRoast(id, aiData.roast);
           setSummary(id, aiData.summarizedItem);
         }
-      } catch {
-        if (id) setExpenseError(id);
+      } catch (e: any) {
+        if (id) {
+          useStore.getState().setAiRoast(id, e.message || '503');
+          useStore.getState().setExpenseError(id);
+        }
       } finally {
         setIsTyping(false);
         setIsSubmitting(false);

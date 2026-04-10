@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { STATUS } from 'react-joyride';
 
 const STEPS = [
   {
@@ -62,10 +63,12 @@ export default function OnboardingTour() {
   }, []);
 
   if (!Joyride) return null;
+  if (hasSeenTour && !runTour) return null;
 
   const handleCallback = (data: any) => {
     const { status } = data;
-    if (status === 'finished' || status === 'skipped') {
+    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
+    if (finishedStatuses.includes(status)) {
       setHasSeenTour(true);
       setRunTour(false);
     }
@@ -75,6 +78,7 @@ export default function OnboardingTour() {
     <Joyride
       steps={STEPS}
       run={runTour}
+      disableBeacon={true}
       continuous
       showSkipButton
       showProgress
