@@ -1,0 +1,22 @@
+# The "Clean Rebase" Fix
+# Run these commands one by one:
+# Pull the remote changes and rebase your local ones on top:
+
+git pull origin main --rebase
+# Git will now stop and tell you there is a conflict in README.md.
+# Tell Git to use the version from the Web (the "theirs" version):
+
+git checkout --theirs README.md
+# Stage the resolved README:
+
+git add README.md
+# Continue the rebase process:
+
+git rebase --continue
+# (If it opens a text editor like Vim, just type :wq and Enter to save and exit).
+# Apply your SSH identity again (just to be safe):
+
+git config core.sshCommand "ssh -i ~/.ssh/id_ed25519_jps"
+# Final Push:
+
+git push origin main
