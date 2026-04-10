@@ -112,7 +112,7 @@ NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and prepare to have your ego dismantled.
+Open [https://broke-ai.vercel.app/](https://broke-ai.vercel.app/) and prepare to have your ego dismantled.
 
 ---
 <div align="center">
