@@ -98,7 +98,7 @@ export default function ConfessionBox() {
         setIsTyping(true, 'Drafting the perfect insult...');
         try {
           const historyObj = useStore.getState().history;
-          const recentContext = historyObj.slice(-3).map(h => ({ item: h.summary || h.expenseName, amount: h.amount, roast: h.aiRoast || '' }));
+          const recentContext = historyObj.slice(-3).map(h => ({ item: h.summary || h.expenseName, amount: h.amount }));
 
           const aiData = await generateToxicRoast(amount, itemName, budgetAfter, days, totalBudget, 'expense', recentContext, toxicityLevel);
           if (id) {
@@ -127,7 +127,7 @@ export default function ConfessionBox() {
       setIsTyping(true, 'Consulting the oracle of financial doom...');
       try {
         const historyObj = useStore.getState().history;
-        const recentContext = historyObj.slice(-3).map(h => ({ item: h.summary || h.expenseName, amount: h.amount, roast: h.aiRoast || '' }));
+        const recentContext = historyObj.slice(-3).map(h => ({ item: h.summary || h.expenseName, amount: h.amount }));
 
         const aiData = await generateToxicRoast(0, helpText, budget, days, totalBudget, 'help', recentContext, toxicityLevel);
         if (id) {

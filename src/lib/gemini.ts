@@ -90,12 +90,14 @@ OUTPUT FORMAT: You must summarize the user's rambling input into a short, punchy
     } catch (error: any) {
       if (DEBUG) console.error('Gemini Parse Error:', error, 'Raw Text:', raw);
       if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
+      if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
       // If parsing fails, just return the cleaned up raw text as the roast so the UI doesn't break.
       return { roast: raw.replace(/[\{\}\\"]/g, '').replace(/json/gi, '').trim() || "My circuits fried trying to calculate your poverty.", summarizedItem: item.length > 20 ? "Financial Mistake" : item };
     }
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Network Error:', error);
     if (error?.message?.includes("403")) return { roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env.", summarizedItem: item };
+    if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
     return { roast: "Even my servers can't handle how broke you are. Connection failed — just like your financial planning.", summarizedItem: item };
   }
 }
@@ -158,6 +160,7 @@ Return ONLY a raw JSON object with no markdown formatting: { "item": "string", "
   } catch (error: any) {
     if (DEBUG) console.error('Gemini Vision Parse Error:', error);
     if (error?.message?.includes("403")) return { item: 'error', amount: 0, roast: "API KEY ERROR: Check console. You forgot to add NEXT_PUBLIC_GEMINI_API_KEY to your env." };
+    if (error?.message?.includes('503') || error?.message?.includes('fetch') || error?.message?.includes('network')) throw error;
     return {
       item: 'unknown purchase',
       amount: 0,
